@@ -2,9 +2,8 @@
 #define _MAINPROCESSOR_H
 
 class MainProcessor{
-	class MainProcessor{
 	    public:
-		MainProcessor(string config_filename); 
+		MainProcessor(string config_filename);
 		~MainProcessor() {};
 
 		void fetch();
@@ -22,8 +21,8 @@ class MainProcessor{
 		string output_mode;   // either to single_step or batch
 		boolean debug_mode;
 		boolean print_memory_contents;
-		boolean write_to_file; 
-		string output_file;  
+		boolean write_to_file;
+		string output_file;
 
 		string jumpAddress; // The current jump address; if none, set value to 0x400000
 
@@ -38,9 +37,9 @@ class MainProcessor{
 		ALU alu1, alu2, alu3;
 		ALUControlUnit ALUControl;
 		controlUnit mainControlUnit;
-		multiplexer mux1, mux2, mux3, mux4, mux5;
-		shiftLeft shiftL1, shiftL2;
-		signExtend signExtend32;
+		Multiplexer mux1, mux2, mux3, mux4, mux5;
+		ShiftLeft shiftL1, shiftL2;
+		SignExtend signExtend32;
 	};
 
 #endif
