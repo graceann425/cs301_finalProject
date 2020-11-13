@@ -1,8 +1,8 @@
 EXECS = tester
-OBJS = ASM.o ASMParser.o Instruction.o Opcode.o RegisterTable.o LabelTable.o
+OBJS = ASMParser.o Instruction.o Opcode.o RegisterTable.o LabelTable.o ALU.o ALUControlUnit.o MainProcessor.o Multiplexer.o PC.o RegisterFile.o RegisterMemory.o ShiftLeft.o SignExtend.o DataMemory.o ControlUnit.o
 
 CC = g++
-CCFLAGS = -std=c++11 -Wall -Wno-deprecated -Werror=return-type -g
+CCFLAGS = -std=c++17 -Wall -Wno-deprecated -Werror=return-type -g
 
 all: $(EXECS)
 
