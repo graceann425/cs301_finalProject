@@ -9,8 +9,14 @@ class SignExtend{
 	// Extend the given value to the extendToAmount
 	string extend(string value);
 
+  string getOutput() {return output};
+
+  void printSignExtend();
+
     private:
 	int extendToAmount;
+  string input;
+  string output;
 
 };
 
