@@ -5,7 +5,7 @@ SignExtend::SignExtend(int amount)
 	extendToAmount = amount;
 }
 
-string SignExtend::Extend(string value)
+string SignExtend::extend(string value)
 {
 	string extend = "";
 	if (value[0] == '0'){
@@ -18,5 +18,5 @@ string SignExtend::Extend(string value)
 	}
 
 	extend.append(value);
-	return extend; 
+	return extend;
 }

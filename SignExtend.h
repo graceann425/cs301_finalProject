@@ -7,7 +7,7 @@ class SignExtend{
 	~SignExtend() {};
 
 	// Extend the given value to the extendToAmount
-	string Extend(string value);
+	string extend(string value);
 
     private:
 	int extendToAmount;
