@@ -3,17 +3,30 @@
 Multiplexer::Multiplexer(string muxName)
 {
 	name = muxName;
-}
-		
-string Multiplexer::select(string a, string b, int controlSignal)
-{
-	if (controlSignal == 0)
-		return a;
-	else
-		return b;
+	inputA = "";
+	inputB = "";
+	output = "";
 }
 
-string Multiplexer::getName()
+string Multiplexer::select(string a, string b, int controlSignal)
 {
-	return name;
+	inputA = a;
+	inputB = b;
+
+	if (controlSignal == 0) {
+		output = a;
+		return a;
+	} else {
+		output = b;
+		return b;
+	}
+}
+
+string Multiplexer::getOutput()
+{
+	return output;
+}
+
+void Multiplexer::printMultiplexer() {
+	
 }
