@@ -130,16 +130,12 @@ MainProcessor::MainProcessor(string config_filename)
 
 }
 
-/*Read the configuration file and initialize all private member variables.
-By the end of the constructor, DataMemory and RegisterMemory will have read their files and stored their memory.
-ASMParser will have also gone through all the instructions from the asm file.
-Copy ASMParser’s vector of instructions into the local member variable vector<Instruction> instructions.*/
 
 void MainProcessor::fetch()
 {
 	 // Get string address and convert to int (hex)
 	string address = pc.getAddress();
-	int int_address = toi(address, nullptr, 16);
+	int int_address = stoi(address, nullptr, 16);
 
 	// Fetch the right instruction within instruction vector
 	int idx =  (int_address - 0x400000)/4;
@@ -171,7 +167,7 @@ void MainProcessor::decode()
 		registerFile.readR1(currentInstruction.getRS());
 		registerFile.readR2(currentInstruction.getRT());
 
-		// Determine write register 
+		// Determine write register
 		// "0" for RT, "1" for RD
 		string result = mux1.select("0","1", mainControlUnit.getRegDest());
 		if (result.equals("0")) {
@@ -186,6 +182,7 @@ void MainProcessor::decode()
 
 		// For I-Type
 		if (type == ITYPE) {
+			// Sign extend from 16 to 32 bits
 			string immediate = currentInstruction.getEncoding().substr(18, string::npos);
 			signExtend32.extend(immediate);
 		}
@@ -197,8 +194,41 @@ void MainProcessor::decode()
 	}
 }
 
-
+// R Type : ADD, SUB, SLT
+// I Type : ADDI, LW, SW, BEQ
+// J Type : J
 void MainProcessor::execute()
 {
+	// Determine which value will go to the ALU
+	string in0 = registerFile.getDataR2();
+	string in1 = signExtend32.getOutput();
+	string mux2_result = mux2.select(in0, in1, mainControlUnit.getALUSrc());
 
+	// Set the operation of alu3 and then operate
+	alu3.setOperation(ALUControl.getOutput());
+	alu3.operate(registerFile.getDataR1(), mux2_result);
+
+	if (mainControlUnit.getBranch() == 1) {
+		// Get sign extended address and shift left by 2
+		string beq_address = signExtend32.getOutput();
+		beq_address = shiftL2.shiftAdd(beq_address);
+
+		// Add PC+4 and address from beq to get target address
+		alu2.operate(alu1.getOutput(), beq_address);
+
+
+		string mux5_result = "";
+
+		if (alu3.getOutput().equals("0")) {
+			// If beq condition is false
+			mux5_result = mux5.select(alu1.getOutput(), alu2.getOutput(), 0);
+		} else {
+			// If beq condition is true
+			mux5_result = mux5.select(alu1.getOutput(), alu2.getOutput(), 1);
+		}
+
+		// Select address and write it back to PC
+		string mux4_result = mux4.select(mux5_result, jumpAddress, mainControlUnit.getJump());
+		pc.setAddress(mux4_result);
+	}
 }

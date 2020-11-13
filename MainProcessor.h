@@ -1,8 +1,24 @@
 #ifndef _MAINPROCESSOR_H
 #define _MAINPROCESSOR_H
 
-class MainProcessor{
-	    public:
+using namespace std;
+
+#include <string>
+#include "ASMParser.h"
+#include "Instruction.h"
+#include "DataMemory.h"
+#include "RegisterMemory.h"
+#include "RegisterFile.h"
+#include "PC.h"
+#include "ALU.h"
+#include "ALUControlUnit.h"
+#include "ControlUnit.h"
+#include "Multiplexer.h"
+#include "ShiftLeft.h"
+#include "SignExtend.h"
+
+class MainProcessor {
+	public:
 		MainProcessor(string config_filename);
 		~MainProcessor() {};
 
@@ -12,11 +28,11 @@ class MainProcessor{
 
 		void execute();
 
-		void memory(string address, string data);
+		void memory();
 
-		void writeback(string data);
+		void writeback();
 
-	    private:
+	private:
 		// Values obtained from config file
 		string output_mode;   // either to single_step or batch
 		boolean debug_mode;
@@ -36,10 +52,10 @@ class MainProcessor{
 		PC pc;
 		ALU alu1, alu2, alu3;
 		ALUControlUnit ALUControl;
-		controlUnit mainControlUnit;
+		ControlUnit mainControlUnit;
 		Multiplexer mux1, mux2, mux3, mux4, mux5;
 		ShiftLeft shiftL1, shiftL2;
 		SignExtend signExtend32;
-	};
+};
 
 #endif
