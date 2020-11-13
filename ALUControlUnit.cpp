@@ -1,6 +1,10 @@
 #include "ALUControlUnit.h"
 
-ALUControlUnit::ALUControlUnit() {}
+ALUControlUnit::ALUControlUnit() {
+	ALUOp = -1;
+	function = "";
+	output = "";
+}
 
 string ALUControlUnit::determineALUOperation(int ALUOperation, string func)
 {
