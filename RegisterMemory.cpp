@@ -1,4 +1,6 @@
 
+#include <iostream>
+#include "RegisterMemory.h"
 
 void RegisterMemory::readFileMemory(string filename) {
   ifstream in;
@@ -15,6 +17,10 @@ void RegisterMemory::readFileMemory(string filename) {
 
     while (getline(in, line)) {
 
+      // Ignore blank line
+      if (line.size() == 0)
+        continue;
+
       // Skip line if it starts with a '#'
       if (line.at(0) == '#')
         continue;
@@ -23,11 +29,30 @@ void RegisterMemory::readFileMemory(string filename) {
       std::size_t start = line.find(':');
 
       if (start != string::npos) {
-        // Check if a comment occurs later on the same line
-        std::size_t end = line.find('#');
 
-        // Add memory to register array
-        registerArray[regNum++] = line.substr(start+1, end);
+        start += 1;
+        string data = "";
+
+        while (start < line.size()) {
+
+          // current character in the line
+          char c = line.at(start);
+
+          // Ignore whitespace
+          if (c == ' ' || c == '\t') {
+            start++;
+
+          // Stop reading line if a comment begins
+          } else if (c == '#') {
+            break;
+
+          // Add character c to data
+          } else {
+            data += c;
+            start++;
+          }
+        }
+        registerArray[regNum++] = data;
       }
     }
   }
@@ -51,9 +76,13 @@ void RegisterMemory::setRegisterData(int regNum, string data) {
 }
 
 
-void RegisterMemory::printRegisterMemory() {
-  cout << "Register Memory: " << endl;
+string RegisterMemory::printRegisterMemory() {
+  stringstream s;
+
+  s << "Register Memory: " << "\n";
 
   for (int i = 0; i < 32; i++)
-    cout << "R" << i.to_string() << ": " << registerArray[i] << endl;
+    s << to_string(i) << ":" << registerArray[i] << "\n";
+
+  return s.str();
 }

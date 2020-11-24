@@ -23,7 +23,7 @@ class RegisterMemory {
     void setRegisterData(int regNum, string data);
 
     // Print the current state of all registers
-    void printRegisterMemory();
+    string printRegisterMemory();
 
   private:
     string registerArray[32];
