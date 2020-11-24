@@ -12,7 +12,7 @@ class RegisterFile {
     ~RegisterFile() {};
 
     // Store a reference to the register memory
-    void addRegisterMemory(RegisterMemory* regMem) {rm = regMem};
+    void addRegisterMemory(RegisterMemory* regMem) { rm = regMem; };
 
 		// Add first register
     void readR1(int reg1) { R1 = reg1; };
@@ -30,8 +30,8 @@ class RegisterFile {
     // Get the data in R2
     string getDataR2();
 
-    // Print all registers and values currently stored
-    void printRegisterFile();
+    // return string of all registers and values currently stored
+    string printRegisterFile();
 
   private:
     RegisterMemory* rm;

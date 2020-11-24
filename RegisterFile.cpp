@@ -13,27 +13,31 @@ RegisterFile::RegisterFile() {
 
 
 void RegisterFile::writeData(string data) {
-  rm.setRegisterData(writeRegister, data);
+  rm->setRegisterData(writeRegister, data);
 }
 
 
 string RegisterFile::getDataR1() {
-  return getRegister(R1);
+  return rm->getRegister(R1);
 }
 
 
 string RegisterFile::getDataR2() {
-  return getRegister(R2);
+  return rm->getRegister(R2);
 }
 
 
-void RegisterFile::printRegisterFile() {
-  cout << "Register File: \n";
-  cout << "In " << endl;
-  cout << "R1: " << R1.to_string() << endl;
-  cout << "R2: " << R2.to_string() << endl;
-  cout << "Write Register: " << writeRegister.to_string() << endl;
-  cout << "Out " << endl;
-  cout << "R1 Data: " << dataR1 << endl;
-  cout << "R2 Data: " << dataR2 << endl;
+string RegisterFile::printRegisterFile() {
+  stringstream s ;
+
+  s << "Register File: \n";
+    << "In \n"
+    << "R1: " << to_string(R1) << "\n"
+    << "R2: " << to_string(R2) << "\n"
+    << "Write Register: " << to_string(writeRegister) << "\n"
+    << "Out \n"
+    << "R1 Data: " << dataR1 << "\n"
+    << "R2 Data: " << dataR2 << "\n";
+
+  return s.str();
 }
