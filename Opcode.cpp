@@ -11,6 +11,13 @@ OpcodeTable::OpcodeTable()
   myArray[ADD].op_field = "000000"; myArray[ADD].funct_field = "100000";
 
   //Your code here
+  // sub rd, rs, rt
+  myArray[SUB].name = "sub";        myArray[SUB].numOps = 3;
+  myArray[SUB].rdPos = 0;           myArray[SUB].rsPos = 1;
+  myArray[SUB].rtPos = 2;           myArray[SUB].immPos = -1;
+  myArray[SUB].instType = RTYPE;
+  myArray[SUB].op_field = "000000"; myArray[SUB].funct_field = "100010";
+
   // addi rt, rs, imm
   myArray[ADDI].name = "addi";       myArray[ADDI].numOps = 3;
   myArray[ADDI].rdPos = -1;          myArray[ADDI].rsPos = 1;
