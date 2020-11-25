@@ -1,22 +1,29 @@
 #ifndef _SHIFTLEFT_H
 #define _SHIFTLEFT_H
 
+#include <string>
+#include <sstream>
+
+using namespace std;
+
 class ShiftLeft{
     public:
-	// indicate the amount to shift and give this object a name
-	ShiftLeft(string objectName, int amount);
+	// give this object a name
+	ShiftLeft(string objectName);
 	~ShiftLeft() {};
 
-	// Shift the binary number (value) left by the designated shift amount
+	// Shift the binary number (value) left by 2
 	string shift(string value);
 	string shiftAdd(string value);
 
-	// Get name of this object
-	string getName(); 
+	// return all associated values of this unit
+	string toString();
 
     private:
 	string name;
-	int shiftAmount;
+  string shiftAmount;
+  string input;
+  string output;
 };
 
 #endif

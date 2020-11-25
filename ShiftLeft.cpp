@@ -1,10 +1,13 @@
 #include "ShiftLeft.h"
 
-ShiftLeft::ShiftLeft(string objectName, int amount)
+ShiftLeft::ShiftLeft(string objectName)
 {
 	name = objectName;
-	shiftAmount = amount;
+	shiftAmount = 2;
+	input = "";
+	output = "";
 }
+
 
 string ShiftLeft::shift(string value)
 {
@@ -18,8 +21,10 @@ string ShiftLeft::shift(string value)
 	{
 		shifted.append('0');
 	}
-	return shifted;
+	output = shifted;
+	return output;
 }
+
 
 string ShiftLeft::shiftAdd(string value)
 {
@@ -27,10 +32,19 @@ string ShiftLeft::shiftAdd(string value)
 	{
 		value.append('0');
 	}
-	return value; 
+	output = value;
+	return output;
 }
 
-string ShiftLeft::getName()
+
+string ShiftLeft::toString()
 {
-	return name; 
+	stringstream s;
+
+	s << "ShiftLeft: \n"
+		<< "Name: " << name << "\n"
+		<< "Input: " << input << "\n"
+		<< "Output: " << output << "\n";
+
+	return s.str();
 }
