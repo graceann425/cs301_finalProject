@@ -27,6 +27,13 @@ string Multiplexer::getOutput()
 	return output;
 }
 
-void Multiplexer::printMultiplexer() {
-	
+string Multiplexer::toString() {
+	stringstream s;
+
+	s << "Multiplexer: " << name << "\n"
+		<< "Input 0: " << inputA << "\n"
+		<< "Input 1: " << inputB << "\n"
+		<< "Output: " << output << "\n";
+
+	return s.str();
 }

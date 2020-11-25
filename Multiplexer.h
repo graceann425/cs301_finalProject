@@ -1,6 +1,11 @@
 #ifndef _MULTIPLEXER_H
 #define _MULTIPLEXER_H
 
+#include <string>
+#include <sstream>
+
+using namespace std;
+
 class Multiplexer{
   public:
 	   Multiplexer(string muxName);
@@ -12,8 +17,8 @@ class Multiplexer{
      // get outout determined in select()
 	   string getOutput();
 
-     // print all variables associated with this object
-     void printMultiplexer();
+     // return string of all variables associated with this object
+     string toString();
 
   private:
 	   string name;
