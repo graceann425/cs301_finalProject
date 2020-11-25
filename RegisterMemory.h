@@ -22,8 +22,8 @@ class RegisterMemory {
     // Load given data into the specified register
     void setRegisterData(int regNum, string data);
 
-    // Print the current state of all registers
-    string printRegisterMemory();
+    // Return the current state of all registers
+    string toString();
 
   private:
     string registerArray[32];

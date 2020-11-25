@@ -76,10 +76,10 @@ void RegisterMemory::setRegisterData(int regNum, string data) {
 }
 
 
-string RegisterMemory::printRegisterMemory() {
+string RegisterMemory::toString() {
   stringstream s;
 
-  s << "Register Memory: " << "\n";
+  s << "Register Memory: \n";
 
   for (int i = 0; i < 32; i++)
     s << to_string(i) << ":" << registerArray[i] << "\n";
