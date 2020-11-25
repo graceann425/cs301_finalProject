@@ -1,8 +1,8 @@
 #include "SignExtend.h"
 
-SignExtend::SignExtend(int amount)
+SignExtend::SignExtend()
 {
-	extendToAmount = amount;
+	extendToAmount = 32;
 	input = "";
 	output = "";
 }
@@ -26,6 +26,13 @@ string SignExtend::extend(string value)
 }
 
 
-void SignExtend::printSignExtend() {
+string SignExtend::toString()
+{
+	stringstream s;
 
+	s << "Sign Extend 32: \n"
+		<< "Input: " << input << "\n"
+		<< "Output: " << output << "\n";
+
+	return s.str();
 }
