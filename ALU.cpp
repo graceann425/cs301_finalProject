@@ -1,26 +1,30 @@
 #include "ALU.h"
 
-ALU::ALU() 
+ALU::ALU()
 {
+	name = "";
 	ALUOperation = "0010";
+	input1 = "";
+	input2 = "";
+	output = "";
 }
 
-string ALU::operate(string in1, string in2) 
+string ALU::operate(string in1, string in2)
 {
 	input1 = in1;
 	input2 = in2;
-	if (ALUOperation.equals("0010")) //add
-		return add();
-	else if (ALUOperation.equals("0110")) //subtract
-		return sub();
-	else if (ALUOperation.equals("0000")) //and
+	if (ALUOperation.compare("0010") == 0) //add
+		return ADD();
+	else if (ALUOperation.compare("0110") == 0) //subtract
+		return SUBTRACT();
+	else if (ALUOperation.compare("0000") == 0) //and
 		return AND();
-	else if (ALUOperation.equals("0001")) //or
+	else if (ALUOperation.compare("0001") == 0) //or
 		return OR();
 	else
 		return setLessThan(); //set on less than (0111)
 }
-	
+
 void ALU::setOperation(string ALUOp)
 {
 	ALUOperation = ALUOp;
@@ -28,31 +32,31 @@ void ALU::setOperation(string ALUOp)
 
 string ALU::AND()
 {
-	output = "00000000000000000000000000000000"
-	for (int i = 0; i < input1.length(); i++)
+	output = "00000000000000000000000000000000";
+	for (int i = 0; i < static_cast<int>(input1.length()); i++)
 	{
 		if (input1[i] == '1' && input2[i] == '1')
 			output[i] == 1;
 	}
-	return output; 
+	return output;
 }
 
 string ALU::OR()
 {
 	output = "00000000000000000000000000000000";
-	for (int i = 0; i < input1.length(); i++)
+	for (int i = 0; i < static_cast<int>(input1.length()); i++)
 	{
 		if (input1[i] == '1' || input2[i] == '1')
 			output[i] == 1;
 	}
-	return output; 
+	return output;
 }
 
 string ALU::SUBTRACT()
 {
 	output = "00000000000000000000000000000000";
 	int borrow = 0;
-	for (int i = 0; i < input1.length(); i++)
+	for (int i = 0; i < static_cast<int>(input1.length()); i++)
 	{
 		if (input1[i] == '1' && borrow > 0){
 			input1[i] = '0';
@@ -70,7 +74,7 @@ string ALU::ADD()
 {
 	output = "00000000000000000000000000000000";
 	int carry = 0;
-	for (int i = 0; i < input1.length(); i++)
+	for (int i = 0; i < static_cast<int>(input1.length()); i++)
 	{
 		if (input1[i] == '1' && input2[i] == '0' && carry == 0)
 			output[i] = '1';
@@ -91,17 +95,34 @@ string ALU::ADD()
 
 string ALU::setLessThan()
 {
-	if (input1 < input2)
-		output = 1;
-	else
-		output = 0;
+	// if (input1 < input2)
+	// 	output = 1;
+	// else
+	// 	output = 0;
 	return output;
 }
-	
-void ALU::printALU()
+
+
+void ALU::setName(string n)
 {
-	cout << "Input1: " << input1 << endl;
-	cout << "Input2: " << input2 << endl;
-	cout << "ALU Operation: " << ALUOperation << endl;
-	cout << "Output: " << output << endl; 
+	name = n;
+}
+
+string ALU::getOutput()
+{
+	return output;
+}
+
+
+string ALU::toString()
+{
+	stringstream s;
+
+	s << name << "\n"
+		<< "Input1: " << input1 << "\n"
+		<< "Input2: " << input2 << "\n"
+	  << "ALU Operation: " << ALUOperation << "\n"
+	  << "Output: " << output << endl;
+
+	return s.str();
 }

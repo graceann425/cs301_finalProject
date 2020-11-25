@@ -2,6 +2,7 @@
 #define _ALU_H
 
 #include <string>
+#include <sstream>
 
 using namespace std;
 
@@ -20,15 +21,22 @@ class ALU{
 	// All operations the ALU can do. Method operate() will call one of these depending on the current value of ALUOperation.
 	string AND();
 	string OR();
-	string subtract();
-	string add();
+	string SUBTRACT();
+	string ADD();
 	string setLessThan();
 
-	// print all values associated with this ALU
-	void printALU();
+  // set name
+  void setName(string n);
+
+  // get output from computations
+  string getOutput();
+
+	// return string of all values associated with this ALU
+	string toString();
 
    private:
 	// Need to store for printing purposes
+  string name;
 	string input1;
 	string input2;
 	string ALUOperation;
