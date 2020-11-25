@@ -6,37 +6,43 @@ ALUControlUnit::ALUControlUnit() {
 	output = "";
 }
 
-string ALUControlUnit::determineALUOperation(int ALUOperation, string func)
+string ALUControlUnit::determineALUOperation(string ALUOperation, string func)
 {
 	ALUOp = ALUOperation;
 	function = func;
-	if (ALUOp.equals("10"))
+	if (ALUOp.compare("10") == 0)
 	{
-		if (func.equals("100000"))
-			output = "0010" //add
-		else if (func.equals("100010"))
-			output = "0110" //subtract
-		else if (func.equals("100100"))
-			output = "0000" //and
-		else if (func.equals("100101"))
-			output = "0001" //or
-		else
-			output = "0111" //set on less than
+		if (func.compare("100000") == 0){
+			output = "0010"; //add
+		} else if (func.compare("100010") == 0){
+			output = "0110"; //subtract
+		} else if (func.compare("100100") == 0){
+			output = "0000"; //and
+		} else if (func.compare("100101") == 0){
+			output = "0001"; //or
+		} else{
+			output = "0111"; //set on less than
+		}
 	}
-	else if (ALUOp.equals("01"))
+	else if (ALUOp.compare("01") == 0)
 	{
-		output = "0110" //subtract for beq
+		output = "0110"; //subtract for beq
 	}
 	else
 	{
-		output = "0010" //add for lw or sw
+		output = "0010"; //add for lw or sw
 	}
-
+	return output;
 }
 
-void ALUControlUnit::printALUControlUnit()
+string ALUControlUnit::toString()
 {
-	cout << "ALU Operation Code: " << ALUOp << endl;
-	cout << "Function code: " << function << endl;
-	cout << "ALU Operation: " << output << endl;
+	stringstream s;
+
+	s << "ALU Control Unit \n"
+    << "ALU Operation Code: " << ALUOp << endl
+	  << "Function code: " << function << endl
+	  << "ALU Operation: " << output << endl;
+
+	return s.str();
 }
