@@ -250,14 +250,25 @@ bool ASMParser::getOperands(Instruction &i, Opcode o,
       //cout << "operand[imm_p]: " << operand[imm_p] << endl;
       // convert string to hexadecimal number
       imm = stoi(operand[imm_p], nullptr, 16);
+
+      // if beq instruction
+      if (opcodes.getInstType(o) == ITYPE)
+        imm = imm/4; // shift right 2
+
     }
     else{
       // Check if immediate field is a label
       if(opcodes.isIMMLabel(o)){  // Can the operand be a label?
         imm = labels.getAddressOfLabel(operand[imm_p]);
-        // if label not found, assign default address
+        // if label not found, assign current address as default
         if (imm == -1)
           imm = myLabelAddress;
+
+        // If I-Type (beq), find the correspoding offset for the address
+        if (opcodes.getInstType(o) == ITYPE) {
+          imm = (imm-myLabelAddress)/4;
+        }
+
       }
       else  // There is an error
 	return false;
@@ -410,6 +421,11 @@ string ASMParser::decimalToBinary(int n, int bits)
   // Converts a decimal number to binary. The parameter bits specifies
   // the number of bits the binary number should have.
 {
+  // If n is negative, use two's complement for binary representation
+  if (n < 0)
+    return negativeDecimalToBinary(n, bits);
+
+
   int count = 0;
   string result = "";
   while (n > 0) {
@@ -428,6 +444,55 @@ string ASMParser::decimalToBinary(int n, int bits)
   // Add extra 0s if needed in order to satisfy total number of bits
   while (count < bits) {
     result = "0" + result;
+    count++;
+  }
+  return result;
+}
+
+
+
+string ASMParser::negativeDecimalToBinary(int n, int bits)
+  // Use two's complement to convert a negative decimal number to binary
+{
+  // make number positive
+  n = n * -1;
+
+  int count = 0;
+  string result = "";
+  while (n > 0) {
+
+    // Return string if its the length of num of bits specified, regardless
+    // if it has finished converting the entire number or not
+    if (count == bits)
+      return result;
+
+    int rem = n % 2;
+    n = n / 2;
+
+    // invert bits
+    if (rem == 1) {
+      result = "0" + result;
+    } else {
+      result = "1" + result;
+    }
+    count++;
+  }
+
+  // Add 1 to binary number
+  int idx = result.size()-1;
+  while (idx >= 0) {
+    if (result.at(idx) == '1') {
+      result.at(idx) = '0';
+      idx--;
+    } else {
+      result.at(idx) = '1';
+      break;
+    }
+  }
+
+  // Add trailing 1s if needed in order to satisfy total number of bits
+  while (count < bits) {
+    result = "1" + result;
     count++;
   }
   return result;

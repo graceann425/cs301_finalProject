@@ -80,6 +80,10 @@ class ASMParser{
 
   // convert a decimal number to binary and return it in the form of a string
   string decimalToBinary(int n, int bits);
+
+  string negativeDecimalToBinary(int n, int bits);
+
+  vector<Instruction>& getInstructionVector() { return myInstructions; };
 };
 
 #endif
