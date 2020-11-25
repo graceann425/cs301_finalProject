@@ -4,6 +4,7 @@
 using namespace std;
 
 #include <string>
+#include <sstream>
 
 class PC {
   public:
@@ -16,6 +17,9 @@ class PC {
 
     // Set current address of PC
     void setAddress(string address) { myAddress = address; };
+
+    // return contents of PC
+    string toString();
 
   private:
     string myAddress;
