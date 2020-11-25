@@ -4,6 +4,10 @@
 using namespace std;
 
 #include <string>
+#include <vector>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 #include "ASMParser.h"
 #include "Instruction.h"
 #include "DataMemory.h"
@@ -32,12 +36,14 @@ class MainProcessor {
 
 		void writeback();
 
+		void printProcessor();
+
 	private:
 		// Values obtained from config file
 		string output_mode;   // either to single_step or batch
-		boolean debug_mode;
-		boolean print_memory_contents;
-		boolean write_to_file;
+		bool debug_mode;
+		bool print_memory_contents;
+		bool write_to_file;
 		string output_file;
 
 		string jumpAddress; // The current jump address; if none, set value to 0x400000

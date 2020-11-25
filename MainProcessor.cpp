@@ -2,7 +2,6 @@
 
 MainProcessor::MainProcessor(string config_filename)
 {
-	myLabelAddress = 0x400000;
 
 	ifstream in;
 	in.open(config_filename.c_str());
@@ -102,7 +101,7 @@ MainProcessor::MainProcessor(string config_filename)
 	while (p < line.length() && isWhitespace(line.at(p)))
 		p++;
 		while (p < len && !isWhitespace(line.at(p))){
-		string output_file = "";
+		output_file = "";
 		output_file = output_file + line.at(p);
 		p++;
 	}
@@ -141,8 +140,8 @@ void MainProcessor::fetch()
 	int idx =  (int_address - 0x400000)/4;
 	currentInstruction = instructions.at(idx);
 
-	// Update address to next instruction
-	alu1.operate(address, 4);
+	// Update address to next instruction (PC+4)
+	alu1.operate(address, "4");
 }
 
 
@@ -170,7 +169,7 @@ void MainProcessor::decode()
 		// Determine write register
 		// "0" for RT, "1" for RD
 		string result = mux1.select("0","1", mainControlUnit.getRegDest());
-		if (result.equals("0")) {
+		if (result.compare("0") == 0) {
 			registerFile.readWriteRegister(currentInstruction.getRT());
 		} else {
 			registerFile.readWriteRegister(currentInstruction.getRD());
@@ -219,7 +218,7 @@ void MainProcessor::execute()
 
 		string mux5_result = "";
 
-		if (alu3.getOutput().equals("0")) {
+		if (alu3.getOutput().compare("0") == 0) {
 			// If beq condition is false
 			mux5_result = mux5.select(alu1.getOutput(), alu2.getOutput(), 0);
 		} else {
@@ -230,5 +229,59 @@ void MainProcessor::execute()
 		// Select address and write it back to PC
 		string mux4_result = mux4.select(mux5_result, jumpAddress, mainControlUnit.getJump());
 		pc.setAddress(mux4_result);
+	}
+}
+
+
+void MainProcessor::printProcessor() {
+
+	stringstream s;
+
+	s << "Fetch Stage: \n"
+		<< pc.toString()
+		<< currentInstruction.getString()
+		<< alu1.toString()
+
+
+		<< "Decode Stage: \n"
+		<< mux1.toString()
+		<< registerFile.toString()
+
+		<< mainControlUnit.toString()
+
+		<< shiftL1.toString()
+		<< signExtend32.toString()
+
+
+		<< "Execute Stage \n"
+		<< shiftL2.toString()
+		<< alu2.toString()
+		<< mux5.toString()
+		<< mux4.toString()
+
+		<< mux2.toString()
+		<< alu3.toString()
+		<< ALUControl.toString()
+
+
+		<< "Memory Stage \n"
+		<< dataMem.printInputsAndOutput()
+		<< mux3.toString();
+
+	if (print_memory_contents) {
+			s << dataMem.printDataMemoy()
+				<< registerMem.toString();
+	}
+
+
+	if (write_to_file && output_file.size() != 0) {
+		// Write to a specified output file
+		ofstream outfile {output_file};
+		outfile << s.str() << endl;
+		outfile.close();
+
+	} else {
+		// Print to command promt
+		cout << s.str() << endl;
 	}
 }
