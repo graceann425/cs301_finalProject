@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -17,17 +18,17 @@ class DataMemory{
 
     //data to write
     void setInData(string data){
-      InData = data
+      InData = data;
     };
 
     //address to write to or read from
     void setInAddress(string address){
-      InAddress = address
+      InAddress = address;
     };
 
     //data read from InAddress
     string getOutData(){
-      return OutData
+      return OutData;
     };
 
     /*finds the data stored in InAddress, to get data after this calculation, use
@@ -41,10 +42,10 @@ class DataMemory{
     void writeData();
 
     //print InAddress, InData, and OutData
-    void printInputsAndOutput();
+    string printInputsAndOutput();
 
     //print all the memory stored in this object
-    void printDataMemory() {};
+    string printDataMemoy();
 
   private:
     string InAddress;

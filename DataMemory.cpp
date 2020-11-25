@@ -1,4 +1,6 @@
-DataMemory(string filename){
+#include "DataMemory.h"
+
+DataMemory::DataMemory(string filename){
   ifstream input;
   input.open(filename.c_str());
 
