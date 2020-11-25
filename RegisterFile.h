@@ -31,7 +31,7 @@ class RegisterFile {
     string getDataR2();
 
     // return string of all registers and values currently stored
-    string printRegisterFile();
+    string toString();
 
   private:
     RegisterMemory* rm;

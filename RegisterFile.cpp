@@ -27,7 +27,7 @@ string RegisterFile::getDataR2() {
 }
 
 
-string RegisterFile::printRegisterFile() {
+string RegisterFile::toString() {
   stringstream s ;
 
   s << "Register File: \n"
