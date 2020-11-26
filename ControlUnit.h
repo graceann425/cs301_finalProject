@@ -1,6 +1,11 @@
 #ifndef __CONTROLUNIT_H__
 #define __CONTROLUNIT_H__
 
+#include <string>
+#include <sstream>
+#include "Opcode.h"
+
+using namespace std;
 
 class ControlUnit{
   public:
@@ -9,18 +14,18 @@ class ControlUnit{
 	   ~ControlUnit() {};
 
      // Given an opcode, set the value of the corresponding control signals to 1 or 0
-	   void setControlSignal(Opcode op) {};
+	   void setControlSignal(Opcode op);
 
 	   // Getters for all control signals
-	   int getRegDest();
-	   int getJump();
-     int getBranch();
-     int getMemRead();
-     int getMemToReg();
-     string getALUOp();
-     int getMemWrite();
-     int getALUSrc();
-     int getRegWrite();
+	   int getRegDest() { return RegDest; };
+	   int getJump() { return Jump; };
+     int getBranch() { return Branch; };
+     int getMemRead() { return MemRead; };
+     int getMemToReg() { return MemToReg; };
+     string getALUOp() { return ALUOp; };
+     int getMemWrite() { return MemWrite; };
+     int getALUSrc() { return ALUSrc; };
+     int getRegWrite() { return RegWrite; };
 
 	   // Print the state of all the control signals
      string toString();
