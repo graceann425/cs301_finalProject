@@ -8,11 +8,14 @@ using namespace std;
 
 class Multiplexer{
   public:
-	   Multiplexer(string muxName);
+	   Multiplexer();
 	   ~Multiplexer() {};
 
 	   // return a if controlSignal == 0, else return b
 	   string select(string a, string b, int controlSignal);
+
+     // Set the name of this Multiplexer
+     void setName(string muxName) {	name = muxName; };
 
      // get outout determined in select()
 	   string getOutput();

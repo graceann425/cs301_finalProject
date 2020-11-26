@@ -1,8 +1,8 @@
 #include "Multiplexer.h"
 
-Multiplexer::Multiplexer(string muxName)
+Multiplexer::Multiplexer()
 {
-	name = muxName;
+	name = "";
 	inputA = "";
 	inputB = "";
 	output = "";
