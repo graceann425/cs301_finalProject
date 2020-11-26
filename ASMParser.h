@@ -33,6 +33,8 @@ class ASMParser{
   // Iterator that returns the next Instruction in the list of Instructions.
   Instruction getNextInstruction();
 
+  vector<Instruction>& getInstructionVector() { return myInstructions; };
+
  private:
   vector<Instruction> myInstructions;      // list of Instructions
   int myIndex;                             // iterator index
@@ -82,8 +84,6 @@ class ASMParser{
   string decimalToBinary(int n, int bits);
 
   string negativeDecimalToBinary(int n, int bits);
-
-  vector<Instruction>& getInstructionVector() { return myInstructions; };
 };
 
 #endif
