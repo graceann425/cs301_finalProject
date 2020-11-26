@@ -1,8 +1,8 @@
 #include "ShiftLeft.h"
 
-ShiftLeft::ShiftLeft(string objectName)
+ShiftLeft::ShiftLeft()
 {
-	name = objectName;
+	name = "";
 	shiftAmount = 2;
 	input = "";
 	output = "";
@@ -12,15 +12,15 @@ ShiftLeft::ShiftLeft(string objectName)
 string ShiftLeft::shift(string value)
 {
 	string shifted = "";
-	for (int i = shiftAmount; i < value.length(); i++)
-	{
-		string s(1, value[i]);
-		shifted.append(s);
-	}
-	for (int i = 0; i < shiftAmount; i++)
-	{
-		shifted.append('0');
-	}
+	// for (int i = shiftAmount; i < value.length(); i++)
+	// {
+	// 	string s(1, value[i]);
+	// 	shifted.append(s);
+	// }
+	// for (int i = 0; i < shiftAmount; i++)
+	// {
+	// 	shifted.append('0');
+	// }
 	output = shifted;
 	return output;
 }
@@ -28,10 +28,10 @@ string ShiftLeft::shift(string value)
 
 string ShiftLeft::shiftAdd(string value)
 {
-	for (int i = 0; i < shiftAmount; i++)
-	{
-		value.append('0');
-	}
+	// for (int i = 0; i < shiftAmount; i++)
+	// {
+	// 	value.append('0');
+	// }
 	output = value;
 	return output;
 }
