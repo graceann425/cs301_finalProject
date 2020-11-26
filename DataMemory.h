@@ -45,7 +45,7 @@ class DataMemory{
     string printInputsAndOutput();
 
     //print all the memory stored in this object
-    string printDataMemoy();
+    string printDataMemory();
 
   private:
     string InAddress;

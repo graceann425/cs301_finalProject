@@ -16,3 +16,15 @@ DataMemory::DataMemory(string filename){
 
 
 }//end setInData() funtion
+
+
+string DataMemory::printInputsAndOutput()
+{
+  return "";
+}
+
+//print all the memory stored in this object
+string DataMemory::printDataMemory()
+{
+  return "";
+}
