@@ -14,6 +14,20 @@ int main(int argc, char *argv[])
     exit(1);
   }
 
+  MainProcessor *mp;
+
+  mp = new MainProcessor(argv[1]);
+
+  mp->fetch();
+  mp->printProcessor();
+
+  delete mp;
+
+  // ALU *a;
+  // a = new ALU();
+  // a->operate("1100","1100");
+  // cout << a->toString();
+  // delete a;
   // RegisterMemory *rm;
   // rm = new RegisterMemory();
   //
