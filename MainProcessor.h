@@ -24,7 +24,7 @@ using namespace std;
 class MainProcessor {
 	public:
 		MainProcessor(string config_filename);
-		~MainProcessor() {};
+		~MainProcessor();
 
 		void fetch();
 
@@ -40,6 +40,9 @@ class MainProcessor {
 
 	private:
 		// Values obtained from config file
+		string program_input;
+		string memory_contents_input;
+		string register_file_input;
 		string output_mode;   // either to single_step or batch
 		bool debug_mode;
 		bool print_memory_contents;
@@ -49,13 +52,13 @@ class MainProcessor {
 		string jumpAddress; // The current jump address; if none, set value to 0x400000
 
 		// Classes and objects needed to run processor
-		ASMParser parser;
+		ASMParser* parser;
 		vector<Instruction> instructions; // get from ASMParser
 		Instruction currentInstruction;     // current instruction being processed
-		DataMemory dataMem;
+		DataMemory* dataMem;
 		RegisterMemory registerMem;
 		RegisterFile registerFile;
-		PC pc;
+		PC* pc;
 		ALU alu1, alu2, alu3;
 		ALUControlUnit ALUControl;
 		ControlUnit mainControlUnit;

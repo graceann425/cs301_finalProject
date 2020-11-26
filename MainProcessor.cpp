@@ -1,4 +1,4 @@
-
+#include "MainProcessor.h"
 
 MainProcessor::MainProcessor(string config_filename)
 {
@@ -7,133 +7,215 @@ MainProcessor::MainProcessor(string config_filename)
 	in.open(config_filename.c_str());
 	string line;
 
-//program input file
-	getline(in, line);
-	string::size_type idx = line.find('=');
-	line = line.substr(idx, line.length());
-	int p = 0;
-	while (p < line.length() && isWhitespace(line.at(p)))
-		p++;
-		while (p < len && !isWhitespace(line.at(p))){
-		string programInput = "";
-		programInput = programInput + line.at(p);
-		p++;
+	while (getline(in, line)) {
+		if (line.size() == 0 || line.at(0) == '#')
+			continue;
+
+		string::size_type idx = 0;
+		string parameter = "";
+		string value = "";
+		bool isValue = false;
+
+		while (idx < line.size()){
+			char c = line.at(idx);
+			if (c == ' ' || c == '\t'){
+				idx++;
+			} else if (c == '#'){
+				break;
+			} else if (c == '='){
+				isValue = true;
+				idx++;
+			} else if (isValue){
+				value += c;
+				idx++;
+			} else {
+				parameter += c;
+				idx++;
+			}
+		}
+
+		if (parameter.compare("program_input") == 0){
+			program_input = value;
+		} else if (parameter.compare("memory_contents_input") == 0){
+			memory_contents_input = value;
+		} else if (parameter.compare("register_file_input") == 0){
+			register_file_input = value;
+		} else if (parameter.compare("output_mode") == 0){
+			output_mode = value;
+		} else if (parameter.compare("debug_mode") == 0){
+			if (value.compare("true") == 0){
+				debug_mode = true;
+			} else {
+				debug_mode = false;
+			}
+		} else if (parameter.compare("print_memory_contents") == 0){
+			if (value.compare("true") == 0){
+				print_memory_contents = true;
+			} else {
+				print_memory_contents = false;
+			}
+		} else if (parameter.compare("write_to_file") == 0){
+			if (value.compare("true") == 0){
+				write_to_file = true;
+			} else {
+				write_to_file = false;
+			}
+		} else {
+			output_file = value;
+		}
+
 	}
 
-//memory contents file
-	getline(in, line);
-	idx = line.find('=');
-	line = line.substr(idx, line.length());
-	int p = 0;
-	while (p < line.length() && isWhitespace(line.at(p)))
-		p++;
-		while (p < len && !isWhitespace(line.at(p))){
-		string memoryContents = "";
-		memoryContents = memoryContents + line.at(p);
-		p++;
-	}
+// //program input file
+// 	getline(in, line);
+// 	string::size_type idx = line.find('=');
+// 	line = line.substr(idx, line.length());
+// 	int p = 0;
+// 	while (p < line.length() && isWhitespace(line.at(p)))
+// 		p++;
+// 		while (p < len && !isWhitespace(line.at(p))){
+// 		string programInput = "";
+// 		programInput = programInput + line.at(p);
+// 		p++;
+// 	}
+//
+// //memory contents file
+// 	getline(in, line);
+// 	idx = line.find('=');
+// 	line = line.substr(idx, line.length());
+// 	int p = 0;
+// 	while (p < line.length() && isWhitespace(line.at(p)))
+// 		p++;
+// 		while (p < len && !isWhitespace(line.at(p))){
+// 		string memoryContents = "";
+// 		memoryContents = memoryContents + line.at(p);
+// 		p++;
+// 	}
+//
+// //register input file
+// 	getline(in, line);
+// 	idx = line.find('=');
+// 	line = line.substr(idx, line.length());
+// 	int p = 0;
+// 	while (p < line.length() && isWhitespace(line.at(p)))
+// 		p++;
+// 		while (p < len && !isWhitespace(line.at(p))){
+// 		string registerInput = "";
+// 		registerInput = registerInput + line.at(p);
+// 		p++;
+// 	}
+//
+// //output mode
+// 	getline(in, line);
+// 	idx = line.find('=');
+// 	line = line.substr(idx, line.length());
+// 	int p = 0;
+// 	while (p < line.length() && isWhitespace(line.at(p)))
+// 		p++;
+// 		while (p < len && !isWhitespace(line.at(p))){
+// 		string output_mode = "";
+// 		output_mode = output_mode + line.at(p);
+// 		p++;
+// 	}
+//
+// //debug mode
+// 	getline(in, line);
+// 	idx = line.find('=');
+// 	line = line.substr(idx, line.length());
+// 	int p = 0;
+// 	while (p < line.length() && isWhitespace(line.at(p)))
+// 		p++;
+// 		while (p < len && !isWhitespace(line.at(p))){
+// 		string debug = "";
+// 		debug = debug + line.at(p);
+// 		p++;
+// 	}
+// 	if (debug.equals("true"))
+// 		debug_mode = true;
+// 	else
+// 		debug_mode = false;
+//
+// //print memory contents mode
+// 	getline(in, line);
+// 	idx = line.find('=');
+// 	line = line.substr(idx, line.length());
+// 	int p = 0;
+// 	while (p < line.length() && isWhitespace(line.at(p)))
+// 		p++;
+// 		while (p < len && !isWhitespace(line.at(p))){
+// 		string memContents = "";
+// 		memContents = memContents + line.at(p);
+// 		p++;
+// 	}
+//  	if (memContents.equals("true"))
+// 		print_memory_contents = true;
+// 	else
+// 		print_memory_contents = false;
+//
+// //output file
+// 	getline(in, line);
+// 	idx = line.find('=');
+// 	line = line.substr(idx, line.length());
+// 	int p = 0;
+// 	while (p < line.length() && isWhitespace(line.at(p)))
+// 		p++;
+// 		while (p < len && !isWhitespace(line.at(p))){
+// 		output_file = "";
+// 		output_file = output_file + line.at(p);
+// 		p++;
+// 	}
+//
+// //write to file mode
+// 	getline(in, line);
+// 	idx = line.find('=');
+// 	line = line.substr(idx, line.length());
+// 	int p = 0;
+// 	while (p < line.length() && isWhitespace(line.at(p)))
+// 		p++;
+// 		while (p < len && !isWhitespace(line.at(p))){
+// 		string fileWrite = "";
+// 		fileWrite = fileWrite + line.at(p);
+// 		p++;
+// 	}
+// 	if (fileWrite.equals("true"))
+// 		write_to_file = true;
+// 	else
+// 		write_to_file = false;
 
-//register input file
-	getline(in, line);
-	idx = line.find('=');
-	line = line.substr(idx, line.length());
-	int p = 0;
-	while (p < line.length() && isWhitespace(line.at(p)))
-		p++;
-		while (p < len && !isWhitespace(line.at(p))){
-		string registerInput = "";
-		registerInput = registerInput + line.at(p);
-		p++;
-	}
+	registerMem.readFileMemory(register_file_input);
+	dataMem = new DataMemory(memory_contents_input);
+	parser = new ASMParser(program_input);
+	pc = new PC("400000");
 
-//output mode
-	getline(in, line);
-	idx = line.find('=');
-	line = line.substr(idx, line.length());
-	int p = 0;
-	while (p < line.length() && isWhitespace(line.at(p)))
-		p++;
-		while (p < len && !isWhitespace(line.at(p))){
-		string output_mode = "";
-		output_mode = output_mode + line.at(p);
-		p++;
-	}
+	instructions = parser->getInstructionVector();
 
-//debug mode
-	getline(in, line);
-	idx = line.find('=');
-	line = line.substr(idx, line.length());
-	int p = 0;
-	while (p < line.length() && isWhitespace(line.at(p)))
-		p++;
-		while (p < len && !isWhitespace(line.at(p))){
-		string debug = "";
-		debug = debug + line.at(p);
-		p++;
-	}
-	if (debug.equals("true"))
-		debug_mode = true;
-	else
-		debug_mode = false;
+	jumpAddress = "400000";
 
-//print memory contents mode
-	getline(in, line);
-	idx = line.find('=');
-	line = line.substr(idx, line.length());
-	int p = 0;
-	while (p < line.length() && isWhitespace(line.at(p)))
-		p++;
-		while (p < len && !isWhitespace(line.at(p))){
-		string memContents = "";
-		memContents = memContents + line.at(p);
-		p++;
-	}
- 	if (memContents.equals("true"))
-		print_memory_contents = true;
-	else
-		print_memory_contents = false;
+	alu1.setName("ADD");
+	alu2.setName("ADD | ALU Result");
+	alu3.setName("ALU | ALU Result");
 
-//output file
-	getline(in, line);
-	idx = line.find('=');
-	line = line.substr(idx, line.length());
-	int p = 0;
-	while (p < line.length() && isWhitespace(line.at(p)))
-		p++;
-		while (p < len && !isWhitespace(line.at(p))){
-		output_file = "";
-		output_file = output_file + line.at(p);
-		p++;
-	}
+	mux1.setName("mux1");
+	mux2.setName("mux2");
+	mux3.setName("mux3");
+	mux4.setName("mux4");
+	mux5.setName("mux5");
 
-//write to file mode
-	getline(in, line);
-	idx = line.find('=');
-	line = line.substr(idx, line.length());
-	int p = 0;
-	while (p < line.length() && isWhitespace(line.at(p)))
-		p++;
-		while (p < len && !isWhitespace(line.at(p))){
-		string fileWrite = "";
-		fileWrite = fileWrite + line.at(p);
-		p++;
-	}
-	if (fileWrite.equals("true"))
-		write_to_file = true;
-	else
-		write_to_file = false;
-
-	registerMem.readFileMemory(registerInput);
-	dataMem(memoryContents);
-	parser(programInput);
-
+	shiftL1.setName("shiftL1: 26 - 28");
+	shiftL2.setName("shiftL2");
 }
 
+MainProcessor::~MainProcessor()
+{
+	delete dataMem;
+	delete parser;
+	delete pc;
+}
 
 void MainProcessor::fetch()
 {
 	 // Get string address and convert to int (hex)
-	string address = pc.getAddress();
+	string address = pc->getAddress();
 	int int_address = stoi(address, nullptr, 16);
 
 	// Fetch the right instruction within instruction vector
@@ -177,17 +259,17 @@ void MainProcessor::decode()
 
 		// Determine the instruction type
 		Opcode o = currentInstruction.getOpcode();
-		InstType type = opcodes.getInstType(o);
+		//InstType type = opcodes.getInstType(o);
 
 		// For I-Type
-		if (type == ITYPE) {
+		if (o == ADDI || o == LW || o == SW || o == BEQ) {
 			// Sign extend from 16 to 32 bits
 			string immediate = currentInstruction.getEncoding().substr(18, string::npos);
 			signExtend32.extend(immediate);
 		}
 		// For R-Type
-		else if (type == RTYPE) {
-			string func = currentInstruction.substr(27, string::npos);
+		else if (o == ADD || o == SUB || o == SLT) {
+			string func = currentInstruction.getEncoding().substr(27, string::npos);
 			ALUControl.determineALUOperation(mainControlUnit.getALUOp(), func);
 		}
 	}
@@ -228,7 +310,7 @@ void MainProcessor::execute()
 
 		// Select address and write it back to PC
 		string mux4_result = mux4.select(mux5_result, jumpAddress, mainControlUnit.getJump());
-		pc.setAddress(mux4_result);
+		pc->setAddress(mux4_result);
 	}
 }
 
@@ -237,39 +319,39 @@ void MainProcessor::printProcessor() {
 
 	stringstream s;
 
-	s << "Fetch Stage: \n"
-		<< pc.toString()
-		<< currentInstruction.getString()
-		<< alu1.toString()
+	s << "----------Fetch Stage---------- \n"
+		<< pc->toString() << "\n\n"
+		<< currentInstruction.getString() << "\n\n"
+		<< alu1.toString() << "\n\n"
 
 
-		<< "Decode Stage: \n"
-		<< mux1.toString()
-		<< registerFile.toString()
+		<< "----------Decode Stage---------- \n"
+		<< mux1.toString() << "\n\n"
+		<< registerFile.toString() << "\n\n"
 
-		<< mainControlUnit.toString()
+		<< mainControlUnit.toString() << "\n\n"
 
-		<< shiftL1.toString()
-		<< signExtend32.toString()
-
-
-		<< "Execute Stage \n"
-		<< shiftL2.toString()
-		<< alu2.toString()
-		<< mux5.toString()
-		<< mux4.toString()
-
-		<< mux2.toString()
-		<< alu3.toString()
-		<< ALUControl.toString()
+		<< shiftL1.toString() << "\n\n"
+		<< signExtend32.toString() << "\n\n"
 
 
-		<< "Memory Stage \n"
-		<< dataMem.printInputsAndOutput()
-		<< mux3.toString();
+		<< "----------Execute Stage---------- \n"
+		<< shiftL2.toString() << "\n\n"
+		<< alu2.toString() << "\n\n"
+		<< mux5.toString() << "\n\n"
+		<< mux4.toString() << "\n\n"
+
+		<< mux2.toString()<< "\n\n"
+		<< alu3.toString() << "\n\n"
+		<< ALUControl.toString() << "\n\n"
+
+
+		<< "----------Memory Stage---------- \n"
+		<< dataMem->printInputsAndOutput() << "\n\n"
+		<< mux3.toString() << "\n\n";
 
 	if (print_memory_contents) {
-			s << dataMem.printDataMemoy()
+			s << dataMem->printDataMemory()
 				<< registerMem.toString();
 	}
 
@@ -281,7 +363,7 @@ void MainProcessor::printProcessor() {
 		outfile.close();
 
 	} else {
-		// Print to command promt
+		// Print to command prompt
 		cout << s.str() << endl;
 	}
 }
