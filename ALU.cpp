@@ -1,12 +1,12 @@
 #include "ALU.h"
-
+#include <iostream>
 ALU::ALU()
 {
 	name = "";
 	ALUOperation = "0010";
-	input1 = "";
-	input2 = "";
-	output = "";
+	input1 = "0";
+	input2 = "0";
+	output = "0";
 }
 
 string ALU::operate(string in1, string in2)
@@ -119,10 +119,10 @@ string ALU::toString()
 	stringstream s;
 
 	s << name << "\n"
-		<< "Input1: " << input1 << "\n"
-		<< "Input2: " << input2 << "\n"
-	  << "ALU Operation: " << ALUOperation << "\n"
-	  << "Output: " << output << endl;
+		<< "Input1: " << hex << "0x" << input1 << "\n"
+		<< "Input2: " << hex << "0x" << input2 << "\n"
+	  << "ALU Operation: " << "0x" << ALUOperation << "\n"
+	  << "Output: " << "0x" << output << endl;
 
 	return s.str();
 }
