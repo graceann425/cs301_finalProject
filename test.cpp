@@ -9,19 +9,49 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-  if(argc < 2){
-    cerr << "Format: ./tester <filename>"<<endl;
+  if(argc < 2) {
+    cerr << "Format: ./tester <config_filename>" << endl;
     exit(1);
   }
 
-  MainProcessor *mp;
 
+  MainProcessor *mp;
   mp = new MainProcessor(argv[1]);
 
-  mp->fetch();
-  mp->printProcessor();
+  // fetch() returns false when it tries to access an index greater than the
+  // total number of instructions in the asm file.
+  while (mp->fetch()) {
+
+    mp->decode();
+    mp->execute();
+    mp->memory();
+    mp->writeback();
+    mp->printProcessor();
+
+    if (mp->isSingleStep()) {
+      char c = 0;
+
+      while (c != 'y') {
+        cout << "Press 'y' to continue: ";
+        cin >> c;
+      }
+    }
+
+  }
 
   delete mp;
+
+  stringstream s;
+
+  // s << hex << 10;
+  //
+  // cout << s.str() << endl;
+  //
+  // int e = stoi("0x1AbC", nullptr, 16);
+  // cout << e << endl;
+  // cout << "0x" << hex << e << endl;
+  // int i = stoi("10000000000000000000000",nullptr,2);
+  // cout << "0x" << hex << i << endl;
 
   // ALU *a;
   // a = new ALU();
