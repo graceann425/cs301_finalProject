@@ -12,7 +12,7 @@ class SignExtend{
 	   ~SignExtend() {};
 
 	   // Extend the given value to the extendToAmount
-	   string extend(string value);
+	   string extendTo32(string value);
 
      string getOutput() { return output; };
 
@@ -20,7 +20,6 @@ class SignExtend{
      string toString();
 
   private:
-	   int extendToAmount;
      string input;
      string output;
 };

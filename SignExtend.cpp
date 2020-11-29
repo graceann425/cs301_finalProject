@@ -2,26 +2,23 @@
 
 SignExtend::SignExtend()
 {
-	extendToAmount = 32;
 	input = "";
 	output = "";
 }
 
-string SignExtend::extend(string value)
+string SignExtend::extendTo32(string value)
 {
 	input = value;
 
 	string extend = "";
 	if (value[0] == '0'){
-		for(int i = 0; i < extendToAmount; i++)
-			extend.append("0");
+		extend = "0000000000000000" + value;
 	}
-	else{
-		for(int i = 0; i < extendToAmount; i++)
-			extend.append("1");
+	else {
+		extend = "1111111111111111" + value;
 	}
 
-	output = extend.append(value);
+	output = extend;
 	return output;
 }
 
@@ -30,7 +27,7 @@ string SignExtend::toString()
 {
 	stringstream s;
 
-	s << "Sign Extend 32: \n"
+	s << "SIGN EXTEND 32 \n"
 		<< "Input: " << input << "\n"
 		<< "Output: " << output << "\n";
 
