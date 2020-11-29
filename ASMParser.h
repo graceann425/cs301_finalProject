@@ -49,7 +49,7 @@ class ASMParser{
 
   // Decomposes a line of assembly code into strings for the opcode field and operands,
   // checking for syntax errors and counting the number of operands.
-  void getTokens(string line, string &opcode, string *operand, int &num_operands);
+  void getTokens(Instruction &inst, string line, string &opcode, string *operand, int &num_operands);
 
   // Given an Opcode, a string representing the operands, and the number of operands,
   // breaks operands apart and stores fields into Instruction.

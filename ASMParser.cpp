@@ -27,12 +27,17 @@ ASMParser::ASMParser(string filename)
       string operand[80];
       int operand_count = 0;
 
+      if (line.size() == 0)
+        continue;
+      if (line.at(0) == '#')
+        continue;
+        
       // If line starts with a label, remove it before getting tokens
       string::size_type idx = line.find(':');
       if (idx != string::npos)
         line = line.substr(idx+1, string::npos);
 
-      getTokens(line, opcode, operand, operand_count);
+      getTokens(i, line, opcode, operand, operand_count);
 
       if(opcode.length() == 0 && operand_count != 0){
 	// No opcode but operands
@@ -77,7 +82,7 @@ Instruction ASMParser::getNextInstruction()
 
 }
 
-void ASMParser::getTokens(string line,
+void ASMParser::getTokens(Instruction &inst, string line,
 			       string &opcode,
 			       string *operand,
 			       int &numOperands)
@@ -87,7 +92,10 @@ void ASMParser::getTokens(string line,
     // locate the start of a comment
     string::size_type idx = line.find('#');
     if (idx != string::npos) // found a ';'
-	line = line.substr(0,idx);
+	     line = line.substr(0,idx);
+
+    inst.setOriginalCode(line);
+
     int len = line.length();
     opcode = "";
     numOperands = 0;
