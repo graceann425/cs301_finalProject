@@ -3,8 +3,8 @@
 string PC::toString(){
   stringstream s;
 
-  s << "PC: \n"
-    << myAddress << "\n";
+  s << "PC \n"
+    << "Current Address: 0x" << myAddress << "\n";
 
-  return s.str(); 
+  return s.str();
 }
