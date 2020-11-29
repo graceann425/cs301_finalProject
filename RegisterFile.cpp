@@ -30,7 +30,7 @@ string RegisterFile::getDataR2() {
 string RegisterFile::toString() {
   stringstream s ;
 
-  s << "Register File: \n"
+  s << "REGISTER FILE \n"
     << "In \n"
     << "R1: " << to_string(R1) << "\n"
     << "R2: " << to_string(R2) << "\n"

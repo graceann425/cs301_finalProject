@@ -12,7 +12,7 @@ class RegisterFile {
     ~RegisterFile() {};
 
     // Store a reference to the register memory
-    void addRegisterMemory(RegisterMemory* regMem) { rm = regMem; };
+    void setRegisterMemory(RegisterMemory& regMem) { rm = &regMem; };
 
 		// Add first register
     void readR1(int reg1) { R1 = reg1; };
