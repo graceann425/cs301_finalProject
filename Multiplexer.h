@@ -12,7 +12,7 @@ class Multiplexer{
 	   ~Multiplexer() {};
 
 	   // return a if controlSignal == 0, else return b
-	   string select(string a, string b, int controlSignal);
+	   string select(string a, string b, int cs);
 
      // Set the name of this Multiplexer
      void setName(string muxName) {	name = muxName; };
