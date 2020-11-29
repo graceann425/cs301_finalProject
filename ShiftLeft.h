@@ -24,7 +24,6 @@ class ShiftLeft{
 
     private:
 	string name;
-  string shiftAmount;
   string input;
   string output;
 };

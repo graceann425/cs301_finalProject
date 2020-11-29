@@ -3,7 +3,6 @@
 ShiftLeft::ShiftLeft()
 {
 	name = "";
-	shiftAmount = 2;
 	input = "";
 	output = "";
 }
@@ -12,15 +11,8 @@ ShiftLeft::ShiftLeft()
 string ShiftLeft::shift(string value)
 {
 	string shifted = "";
-	// for (int i = shiftAmount; i < value.length(); i++)
-	// {
-	// 	string s(1, value[i]);
-	// 	shifted.append(s);
-	// }
-	// for (int i = 0; i < shiftAmount; i++)
-	// {
-	// 	shifted.append('0');
-	// }
+
+	shifted = value.substr(2,string::npos) + "00";
 	output = shifted;
 	return output;
 }
@@ -28,11 +20,7 @@ string ShiftLeft::shift(string value)
 
 string ShiftLeft::shiftAdd(string value)
 {
-	// for (int i = 0; i < shiftAmount; i++)
-	// {
-	// 	value.append('0');
-	// }
-	output = value;
+	output = value + "00";
 	return output;
 }
 
@@ -41,8 +29,8 @@ string ShiftLeft::toString()
 {
 	stringstream s;
 
-	s << "ShiftLeft: \n"
-		<< "Name: " << name << "\n"
+	s << "SHIFT LEFT 2 \t "
+		<< name << "\n"
 		<< "Input: " << input << "\n"
 		<< "Output: " << output << "\n";
 
