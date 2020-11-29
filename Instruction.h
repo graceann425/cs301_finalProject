@@ -29,7 +29,7 @@ class Instruction{
   Register getRT()     { return myRT; };
   int getImmediate()   { return myImmediate; };
 
-  // Returns a string which represents all of the fields 
+  // Returns a string which represents all of the fields
   string getString();
 
   // Stores the 32 bit binary encoding of MIPS instruction passed in
@@ -38,6 +38,9 @@ class Instruction{
   // Returns string representing the 32 binary encoding of MIPS instruction
   string getEncoding() { return myEncoding; };
 
+  void setOriginalCode(string s) { originalCode = s; };
+  string getOriginalCode()       { return originalCode; };
+
  private:
   Opcode myOpcode;
   Register myRS;
@@ -45,6 +48,7 @@ class Instruction{
   Register myRD;
   int myImmediate;
 
+  string originalCode;
   string myEncoding;
 };
 
