@@ -26,7 +26,7 @@ class MainProcessor {
 		MainProcessor(string config_filename);
 		~MainProcessor();
 
-		void fetch();
+		bool fetch();
 
 		void decode();
 
@@ -36,7 +36,12 @@ class MainProcessor {
 
 		void writeback();
 
+		string hexToBinary(string hex);
+
 		void printProcessor();
+
+		// Return true if the processor is in single_step mode.
+		bool isSingleStep() { return output_mode.compare("single_step") == 0; };
 
 	private:
 		// Values obtained from config file
@@ -48,6 +53,9 @@ class MainProcessor {
 		bool print_memory_contents;
 		bool write_to_file;
 		string output_file;
+		ofstream outfile;
+
+		int curInstrIdx; // The index of the current instruction
 
 		string jumpAddress; // The current jump address; if none, set value to 0x400000
 

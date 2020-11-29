@@ -66,126 +66,13 @@ MainProcessor::MainProcessor(string config_filename)
 
 	}
 
-// //program input file
-// 	getline(in, line);
-// 	string::size_type idx = line.find('=');
-// 	line = line.substr(idx, line.length());
-// 	int p = 0;
-// 	while (p < line.length() && isWhitespace(line.at(p)))
-// 		p++;
-// 		while (p < len && !isWhitespace(line.at(p))){
-// 		string programInput = "";
-// 		programInput = programInput + line.at(p);
-// 		p++;
-// 	}
-//
-// //memory contents file
-// 	getline(in, line);
-// 	idx = line.find('=');
-// 	line = line.substr(idx, line.length());
-// 	int p = 0;
-// 	while (p < line.length() && isWhitespace(line.at(p)))
-// 		p++;
-// 		while (p < len && !isWhitespace(line.at(p))){
-// 		string memoryContents = "";
-// 		memoryContents = memoryContents + line.at(p);
-// 		p++;
-// 	}
-//
-// //register input file
-// 	getline(in, line);
-// 	idx = line.find('=');
-// 	line = line.substr(idx, line.length());
-// 	int p = 0;
-// 	while (p < line.length() && isWhitespace(line.at(p)))
-// 		p++;
-// 		while (p < len && !isWhitespace(line.at(p))){
-// 		string registerInput = "";
-// 		registerInput = registerInput + line.at(p);
-// 		p++;
-// 	}
-//
-// //output mode
-// 	getline(in, line);
-// 	idx = line.find('=');
-// 	line = line.substr(idx, line.length());
-// 	int p = 0;
-// 	while (p < line.length() && isWhitespace(line.at(p)))
-// 		p++;
-// 		while (p < len && !isWhitespace(line.at(p))){
-// 		string output_mode = "";
-// 		output_mode = output_mode + line.at(p);
-// 		p++;
-// 	}
-//
-// //debug mode
-// 	getline(in, line);
-// 	idx = line.find('=');
-// 	line = line.substr(idx, line.length());
-// 	int p = 0;
-// 	while (p < line.length() && isWhitespace(line.at(p)))
-// 		p++;
-// 		while (p < len && !isWhitespace(line.at(p))){
-// 		string debug = "";
-// 		debug = debug + line.at(p);
-// 		p++;
-// 	}
-// 	if (debug.equals("true"))
-// 		debug_mode = true;
-// 	else
-// 		debug_mode = false;
-//
-// //print memory contents mode
-// 	getline(in, line);
-// 	idx = line.find('=');
-// 	line = line.substr(idx, line.length());
-// 	int p = 0;
-// 	while (p < line.length() && isWhitespace(line.at(p)))
-// 		p++;
-// 		while (p < len && !isWhitespace(line.at(p))){
-// 		string memContents = "";
-// 		memContents = memContents + line.at(p);
-// 		p++;
-// 	}
-//  	if (memContents.equals("true"))
-// 		print_memory_contents = true;
-// 	else
-// 		print_memory_contents = false;
-//
-// //output file
-// 	getline(in, line);
-// 	idx = line.find('=');
-// 	line = line.substr(idx, line.length());
-// 	int p = 0;
-// 	while (p < line.length() && isWhitespace(line.at(p)))
-// 		p++;
-// 		while (p < len && !isWhitespace(line.at(p))){
-// 		output_file = "";
-// 		output_file = output_file + line.at(p);
-// 		p++;
-// 	}
-//
-// //write to file mode
-// 	getline(in, line);
-// 	idx = line.find('=');
-// 	line = line.substr(idx, line.length());
-// 	int p = 0;
-// 	while (p < line.length() && isWhitespace(line.at(p)))
-// 		p++;
-// 		while (p < len && !isWhitespace(line.at(p))){
-// 		string fileWrite = "";
-// 		fileWrite = fileWrite + line.at(p);
-// 		p++;
-// 	}
-// 	if (fileWrite.equals("true"))
-// 		write_to_file = true;
-// 	else
-// 		write_to_file = false;
 
 	registerMem.readFileMemory(register_file_input);
 	dataMem = new DataMemory(memory_contents_input);
 	parser = new ASMParser(program_input);
 	pc = new PC("400000");
+
+	registerFile.setRegisterMemory(registerMem);
 
 	instructions = parser->getInstructionVector();
 
@@ -201,9 +88,13 @@ MainProcessor::MainProcessor(string config_filename)
 	mux4.setName("mux4");
 	mux5.setName("mux5");
 
-	shiftL1.setName("shiftL1: 26 - 28");
+	shiftL1.setName("shiftL1 | 26 - 28");
 	shiftL2.setName("shiftL2");
+
+	if (write_to_file && output_file.size() != 0)
+		outfile.open(output_file, ios::trunc);
 }
+
 
 MainProcessor::~MainProcessor()
 {
@@ -212,18 +103,30 @@ MainProcessor::~MainProcessor()
 	delete pc;
 }
 
-void MainProcessor::fetch()
+
+bool MainProcessor::fetch()
 {
 	 // Get string address and convert to int (hex)
 	string address = pc->getAddress();
 	int int_address = stoi(address, nullptr, 16);
 
 	// Fetch the right instruction within instruction vector
-	int idx =  (int_address - 0x400000)/4;
-	currentInstruction = instructions.at(idx);
+	//curInstrIdx = (int_address - 0x400000)/4;
+	cout << curInstrIdx << endl;
+
+	if (curInstrIdx >= static_cast<int>(instructions.size()))
+		return false;
+
+	currentInstruction = instructions.at(curInstrIdx);
+	cout << currentInstruction.getOriginalCode() << endl;
+	cout << currentInstruction.getEncoding() << endl;
+
+	curInstrIdx++;
 
 	// Update address to next instruction (PC+4)
-	alu1.operate(address, "4");
+	alu1.operate(hexToBinary(address), "0100");
+
+	return true;
 }
 
 
@@ -235,7 +138,7 @@ void MainProcessor::decode()
 	if (mainControlUnit.getJump() == 1) {
 		// Get jump address and shift left by 2
 		string j = currentInstruction.getEncoding();
-		j = shiftL1.shift(j.substr(6, string::npos));
+		j = shiftL1.shiftAdd(j.substr(6, string::npos));
 
 		// alu1 output = PC+4
 		string PC4_address = alu1.getOutput();
@@ -264,8 +167,8 @@ void MainProcessor::decode()
 		// For I-Type
 		if (o == ADDI || o == LW || o == SW || o == BEQ) {
 			// Sign extend from 16 to 32 bits
-			string immediate = currentInstruction.getEncoding().substr(18, string::npos);
-			signExtend32.extend(immediate);
+			string immediate = currentInstruction.getEncoding().substr(16, string::npos);
+			signExtend32.extendTo32(immediate);
 		}
 		// For R-Type
 		else if (o == ADD || o == SUB || o == SLT) {
@@ -282,20 +185,27 @@ void MainProcessor::execute()
 {
 	// Determine which value will go to the ALU
 	string in0 = registerFile.getDataR2();
+	in0 = hexToBinary(in0);
 	string in1 = signExtend32.getOutput();
 	string mux2_result = mux2.select(in0, in1, mainControlUnit.getALUSrc());
 
+	// Convert hex to binary
+	string input_r1 = registerFile.getDataR1();
+	input_r1 = hexToBinary(input_r1);
+
 	// Set the operation of alu3 and then operate
 	alu3.setOperation(ALUControl.getOutput());
-	alu3.operate(registerFile.getDataR1(), mux2_result);
+	alu3.operate(input_r1, mux2_result);
 
 	if (mainControlUnit.getBranch() == 1) {
 		// Get sign extended address and shift left by 2
 		string beq_address = signExtend32.getOutput();
-		beq_address = shiftL2.shiftAdd(beq_address);
+		beq_address = shiftL2.shift(beq_address);
 
 		// Add PC+4 and address from beq to get target address
-		alu2.operate(alu1.getOutput(), beq_address);
+		string alu1_output = alu1.getOutput();
+		alu1_output = hexToBinary(alu1_output);
+		alu2.operate(alu1_output, beq_address);
 
 
 		string mux5_result = "";
@@ -315,17 +225,88 @@ void MainProcessor::execute()
 }
 
 
-void MainProcessor::printProcessor() {
+void MainProcessor::memory()
+{
+
+}
+
+
+void MainProcessor::writeback()
+{
+
+}
+
+
+string MainProcessor::hexToBinary(string hex)
+{
+	string binary = "";
+
+	for (int i=hex.size()-1; i >= 0; i--) {
+		char c = hex.at(i);
+
+		// If uppercase, make lowercase
+		if (c >= 65 && c <= 90)
+			c += 32;
+
+		switch (c) {
+			case '0':
+				binary = "0000" + binary;	break;
+			case '1':
+				binary = "0001" + binary;	break;
+			case '2':
+				binary = "0010" + binary;	break;
+			case '3':
+				binary = "0011" + binary;	break;
+			case '4':
+				binary = "0100" + binary;	break;
+			case '5':
+				binary = "0101" + binary;	break;
+			case '6':
+				binary = "0110" + binary;	break;
+			case '7':
+				binary = "0111" + binary;	break;
+			case '8':
+				binary = "1000" + binary;	break;
+			case '9':
+				binary = "1001" + binary;	break;
+			case 'a':
+				binary = "1010" + binary;	break;
+			case 'b':
+				binary = "1011" + binary; break;
+			case 'c':
+				binary = "1100" + binary;	break;
+			case 'd':
+				binary = "1101" + binary;	break;
+			case 'e':
+				binary = "1110" + binary;	break;
+			case 'f':
+				binary = "1111" + binary;	break;
+			case 'x':
+				// In the case hex number starts with 0x
+				return binary;
+		}
+	}
+	return binary;
+}
+
+
+void MainProcessor::printProcessor()
+{
 
 	stringstream s;
 
-	s << "----------Fetch Stage---------- \n"
+	s << "---------------------------------------------------------------------\n"
+		<< "--------------------Fetch Stage-------------------- \n"
 		<< pc->toString() << "\n\n"
-		<< currentInstruction.getString() << "\n\n"
+
+		<< "INSTRUCTION MEMORY\n"
+		<< "ASM: " << currentInstruction.getOriginalCode() << "\n"
+		<< "32-bit: " << currentInstruction.getEncoding() << "\n\n"
+
 		<< alu1.toString() << "\n\n"
 
 
-		<< "----------Decode Stage---------- \n"
+		<< "--------------------Decode Stage-------------------- \n"
 		<< mux1.toString() << "\n\n"
 		<< registerFile.toString() << "\n\n"
 
@@ -335,7 +316,7 @@ void MainProcessor::printProcessor() {
 		<< signExtend32.toString() << "\n\n"
 
 
-		<< "----------Execute Stage---------- \n"
+		<< "--------------------Execute Stage-------------------- \n"
 		<< shiftL2.toString() << "\n\n"
 		<< alu2.toString() << "\n\n"
 		<< mux5.toString() << "\n\n"
@@ -346,7 +327,7 @@ void MainProcessor::printProcessor() {
 		<< ALUControl.toString() << "\n\n"
 
 
-		<< "----------Memory Stage---------- \n"
+		<< "--------------------Memory Stage-------------------- \n"
 		<< dataMem->printInputsAndOutput() << "\n\n"
 		<< mux3.toString() << "\n\n";
 
@@ -358,9 +339,7 @@ void MainProcessor::printProcessor() {
 
 	if (write_to_file && output_file.size() != 0) {
 		// Write to a specified output file
-		ofstream outfile {output_file};
 		outfile << s.str() << endl;
-		outfile.close();
 
 	} else {
 		// Print to command prompt
