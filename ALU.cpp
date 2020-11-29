@@ -36,7 +36,7 @@ string ALU::AND()
 	for (int i = 0; i < static_cast<int>(input1.length()); i++)
 	{
 		if (input1[i] == '1' && input2[i] == '1')
-			output[i] == 1;
+			output[i] = '1';
 	}
 	return output;
 }
@@ -47,7 +47,7 @@ string ALU::OR()
 	for (int i = 0; i < static_cast<int>(input1.length()); i++)
 	{
 		if (input1[i] == '1' || input2[i] == '1')
-			output[i] == 1;
+			output[i] = '1';
 	}
 	return output;
 }
@@ -56,7 +56,7 @@ string ALU::SUBTRACT()
 {
 	output = "00000000000000000000000000000000";
 	int borrow = 0;
-	for (int i = 0; i < static_cast<int>(input1.length()); i++)
+	for (int i = static_cast<int>(input1.length()-1); i >= 0 ; i--)
 	{
 		if (input1[i] == '1' && borrow > 0){
 			input1[i] = '0';
@@ -74,7 +74,7 @@ string ALU::ADD()
 {
 	output = "00000000000000000000000000000000";
 	int carry = 0;
-	for (int i = 0; i < static_cast<int>(input1.length()); i++)
+	for (int i = static_cast<int>(input1.length()-1); i >= 0 ; i--)
 	{
 		if (input1[i] == '1' && input2[i] == '0' && carry == 0)
 			output[i] = '1';
