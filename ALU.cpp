@@ -54,20 +54,15 @@ string ALU::OR()
 
 string ALU::SUBTRACT()
 {
-	output = "00000000000000000000000000000000";
 	int borrow = 0;
-	for (int i = static_cast<int>(input1.length()-1); i >= 0 ; i--)
+	for (int i = 0; i < static_cast<int>(input1.length()); i++)
 	{
-		if (input1[i] == '1' && borrow > 0){
+		if (input1[i] == '1')
 			input1[i] = '0';
-			borrow = borrow - 1;
-		}
-		if (input1[i] == '1' && input2[i] == '0')
-			output[i] = '1';
-		else if (input1[i] == '0' && input2[i] == '1')
-			borrow = borrow + 1;
+		else
+			input1[i] = '1';
 	}
-	return output;
+	return ADD();
 }
 
 string ALU::ADD()
