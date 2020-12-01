@@ -3,6 +3,7 @@
 
 #include <string>
 #include <sstream>
+#include "NumberConverter.h"
 
 using namespace std;
 
