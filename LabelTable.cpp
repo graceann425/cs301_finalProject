@@ -17,6 +17,11 @@ void LabelTable::addLabels(string filename)
     LabelEntry le;                 // Holds label and address
 
     while (getline(in, line)){
+
+      // Ignore blank or comment lines
+      if (line.at(0) == '#' || line.size() == 0)
+         continue;
+
       // Look at every character in current line for a ':'
       for (int i = 0; i < static_cast<int>(line.length()); i++){
 
