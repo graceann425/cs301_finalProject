@@ -3,6 +3,7 @@
 
 #include <string>
 #include <sstream>
+#include "NumberConverter.h"
 
 using namespace std;
 
@@ -18,6 +19,9 @@ class SignExtend{
 
      // Returns all values associated with this object
      string toString();
+
+     // Reset the value of all the member variables
+     void reset();
 
   private:
      string input;

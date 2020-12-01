@@ -6,6 +6,7 @@ SignExtend::SignExtend()
 	output = "";
 }
 
+
 string SignExtend::extendTo32(string value)
 {
 	input = value;
@@ -27,9 +28,21 @@ string SignExtend::toString()
 {
 	stringstream s;
 
-	s << "SIGN EXTEND 32 \n"
-		<< "Input: " << input << "\n"
-		<< "Output: " << output << "\n";
+	s << "SIGN EXTEND 32 "
+		<< "\nInput: ";
+		if (input.size() != 0)
+		 	s << "0x" << NumberConverter::binaryToHex(input);
+
+	s	<< "\nOutput: ";
+	 	if (output.size() !=0)
+			s << "0x" << NumberConverter::binaryToHex(output) << "\n";
 
 	return s.str();
+}
+
+
+void SignExtend::reset()
+{
+	input = "";
+	output = "";
 }
