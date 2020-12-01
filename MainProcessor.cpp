@@ -107,24 +107,25 @@ MainProcessor::~MainProcessor()
 bool MainProcessor::fetch()
 {
 	 // Get string address and convert to int (hex)
-	string address = pc->getAddress();
-	int int_address = stoi(address, nullptr, 16);
+	curAddress = pc->getAddress();
+	//cout << "address:" << curAddress << endl;
+	int int_address = stoi(curAddress, nullptr, 16);
 
 	// Fetch the right instruction within instruction vector
-	//curInstrIdx = (int_address - 0x400000)/4;
-	cout << curInstrIdx << endl;
+	curInstrIdx = (int_address - 0x400000)/4;
+	//cout << curInstrIdx << endl;
 
 	if (curInstrIdx >= static_cast<int>(instructions.size()))
 		return false;
 
 	currentInstruction = instructions.at(curInstrIdx);
-	cout << currentInstruction.getOriginalCode() << endl;
-	cout << currentInstruction.getEncoding() << endl;
+	//cout << currentInstruction.getOriginalCode() << endl;
+	//cout << currentInstruction.getEncoding() << endl;
 
-	curInstrIdx++;
 
 	// Update address to next instruction (PC+4)
-	alu1.operate(hexToBinary(address), "0100");
+	string binary_4 = "00000000000000000000000000000100";
+	alu1.operate(NumberConverter::hexToBinary(curAddress), binary_4);
 
 	return true;
 }
@@ -141,7 +142,7 @@ void MainProcessor::decode()
 		j = shiftL1.shiftAdd(j.substr(6, string::npos));
 
 		// alu1 output = PC+4
-		string PC4_address = alu1.getOutput();
+		string PC4_address = NumberConverter::hexToBinary(alu1.getOutput());
 
 		// concatenate PC+4 [31-28] and jump address [31-0]
 		jumpAddress = PC4_address.substr(0,4) + j;
@@ -151,27 +152,32 @@ void MainProcessor::decode()
 		registerFile.readR1(currentInstruction.getRS());
 		registerFile.readR2(currentInstruction.getRT());
 
+		// Get instruction type
+		Opcode o = currentInstruction.getOpcode();
+
 		// Determine write register
-		// "0" for RT, "1" for RD
-		string result = mux1.select("0","1", mainControlUnit.getRegDest());
-		if (result.compare("0") == 0) {
-			registerFile.readWriteRegister(currentInstruction.getRT());
-		} else {
-			registerFile.readWriteRegister(currentInstruction.getRD());
+		if (o == LW || isRtype(o)) {
+
+			string rt = to_string(currentInstruction.getRT());
+			string rd = to_string(currentInstruction.getRD());
+
+			string mux1_result = mux1.select(rt,rd, mainControlUnit.getRegDest());
+
+			// Set write register
+			int wr = stoi(mux1_result,nullptr,16);
+			registerFile.readWriteRegister(wr);
 		}
 
-		// Determine the instruction type
-		Opcode o = currentInstruction.getOpcode();
-		//InstType type = opcodes.getInstType(o);
 
 		// For I-Type
-		if (o == ADDI || o == LW || o == SW || o == BEQ) {
+		if (isIType(o)) {
 			// Sign extend from 16 to 32 bits
 			string immediate = currentInstruction.getEncoding().substr(16, string::npos);
 			signExtend32.extendTo32(immediate);
+			ALUControl.determineALUOperation(mainControlUnit.getALUOp(), "");
 		}
 		// For R-Type
-		else if (o == ADD || o == SUB || o == SLT) {
+		else if (isRtype(o)) {
 			string func = currentInstruction.getEncoding().substr(27, string::npos);
 			ALUControl.determineALUOperation(mainControlUnit.getALUOp(), func);
 		}
@@ -183,156 +189,153 @@ void MainProcessor::decode()
 // J Type : J
 void MainProcessor::execute()
 {
-	// Determine which value will go to the ALU
-	string in0 = registerFile.getDataR2();
-	in0 = hexToBinary(in0);
-	string in1 = signExtend32.getOutput();
-	string mux2_result = mux2.select(in0, in1, mainControlUnit.getALUSrc());
+	Opcode o = currentInstruction.getOpcode();
 
-	// Convert hex to binary
-	string input_r1 = registerFile.getDataR1();
-	input_r1 = hexToBinary(input_r1);
+	if (!isJType(o)) {
 
-	// Set the operation of alu3 and then operate
-	alu3.setOperation(ALUControl.getOutput());
-	alu3.operate(input_r1, mux2_result);
+		// Determine which value will go to the ALU
+		string in0 = registerFile.getDataR2();
+		in0 = NumberConverter::hexToBinary(in0);
 
+		string in1 = signExtend32.getOutput();
+
+		string mux2_result = mux2.select(in0, in1, mainControlUnit.getALUSrc());
+		mux2_result = NumberConverter::hexToBinary(mux2_result);
+
+
+		// Convert DataR1 from hex to binary
+		string input_r1 = registerFile.getDataR1();
+		input_r1 = NumberConverter::hexToBinary(input_r1);
+
+
+		// Set the operation of alu3 and then operate
+		alu3.setOperation(ALUControl.getOutput());
+		alu3.operate(input_r1, mux2_result);
+	}
+
+	string mux5_result = "";
+
+	// Case where there is a BEQ instruction
 	if (mainControlUnit.getBranch() == 1) {
+
 		// Get sign extended address and shift left by 2
 		string beq_address = signExtend32.getOutput();
 		beq_address = shiftL2.shift(beq_address);
 
 		// Add PC+4 and address from beq to get target address
-		string alu1_output = alu1.getOutput();
-		alu1_output = hexToBinary(alu1_output);
-		alu2.operate(alu1_output, beq_address);
+		string curAddress_binary = NumberConverter::hexToBinary(curAddress);
+		alu2.operate(curAddress_binary, beq_address);
 
 
-		string mux5_result = "";
-
-		if (alu3.getOutput().compare("0") == 0) {
-			// If beq condition is false
-			mux5_result = mux5.select(alu1.getOutput(), alu2.getOutput(), 0);
-		} else {
+		string alu3_output = alu3.getOutput();
+		if (alu3_output.compare("00000000") == 0) {
 			// If beq condition is true
 			mux5_result = mux5.select(alu1.getOutput(), alu2.getOutput(), 1);
+
+		} else {
+			// If beq condition is false
+			mux5_result = mux5.select(alu1.getOutput(), alu2.getOutput(), 0);
 		}
 
-		// Select address and write it back to PC
-		string mux4_result = mux4.select(mux5_result, jumpAddress, mainControlUnit.getJump());
-		pc->setAddress(mux4_result);
+	// If no BEQ, mux5 still needs to output PC+4
+	} else {
+			mux5_result = mux5.select(alu1.getOutput(), alu2.getOutput(), mainControlUnit.getBranch());
 	}
+
+	// Select address and write it back to PC
+	string mux4_result = mux4.select(mux5_result, jumpAddress, mainControlUnit.getJump());
+	pc->setAddress(mux4_result);
 }
 
 
 void MainProcessor::memory()
 {
-
+	if (mainControlUnit.getMemRead() == 1) {
+		dataMem->setInAddress(alu3.getOutput());
+		dataMem->readData();
+	} else if (mainControlUnit.getMemWrite() == 1) {
+		dataMem->setInAddress(alu3.getOutput());
+		dataMem->setInData(registerFile.getDataR2());
+	}
 }
 
 
 void MainProcessor::writeback()
 {
-
-}
-
-
-string MainProcessor::hexToBinary(string hex)
-{
-	string binary = "";
-
-	for (int i=hex.size()-1; i >= 0; i--) {
-		char c = hex.at(i);
-
-		// If uppercase, make lowercase
-		if (c >= 65 && c <= 90)
-			c += 32;
-
-		switch (c) {
-			case '0':
-				binary = "0000" + binary;	break;
-			case '1':
-				binary = "0001" + binary;	break;
-			case '2':
-				binary = "0010" + binary;	break;
-			case '3':
-				binary = "0011" + binary;	break;
-			case '4':
-				binary = "0100" + binary;	break;
-			case '5':
-				binary = "0101" + binary;	break;
-			case '6':
-				binary = "0110" + binary;	break;
-			case '7':
-				binary = "0111" + binary;	break;
-			case '8':
-				binary = "1000" + binary;	break;
-			case '9':
-				binary = "1001" + binary;	break;
-			case 'a':
-				binary = "1010" + binary;	break;
-			case 'b':
-				binary = "1011" + binary; break;
-			case 'c':
-				binary = "1100" + binary;	break;
-			case 'd':
-				binary = "1101" + binary;	break;
-			case 'e':
-				binary = "1110" + binary;	break;
-			case 'f':
-				binary = "1111" + binary;	break;
-			case 'x':
-				// In the case hex number starts with 0x
-				return binary;
-		}
+	Opcode o = currentInstruction.getOpcode();
+	if (o == LW || isRtype(o)) {
+		string mux3_result = "";
+		mux3_result = mux3.select(alu3.getOutput(), dataMem->getOutData(), mainControlUnit.getMemToReg());
+		registerFile.writeData(mux3_result);
 	}
-	return binary;
 }
 
 
 void MainProcessor::printProcessor()
 {
+	string newLine = "--------------------------------------------------------------------------------\n";
 
 	stringstream s;
 
-	s << "---------------------------------------------------------------------\n"
-		<< "--------------------Fetch Stage-------------------- \n"
+	s << newLine << newLine
+		<< "----------------------------------FETCH STAGE----------------------------------- \n"
+		<< newLine
+		<< "Current Address: 0x" << curAddress << '\n'
 		<< pc->toString() << "\n\n"
 
 		<< "INSTRUCTION MEMORY\n"
 		<< "ASM: " << currentInstruction.getOriginalCode() << "\n"
-		<< "32-bit: " << currentInstruction.getEncoding() << "\n\n"
+		<< "Hex: 0x" << NumberConverter::binaryToHex(currentInstruction.getEncoding()) << "\n"
+		<< "32-bit: " << currentInstruction.getEncoding() << "\n\n";
 
-		<< alu1.toString() << "\n\n"
+		if (print_memory_contents) {
+				s << newLine;
+				for (int i=0; i < static_cast<int>(instructions.size()); i++)
+					s << instructions.at(i).getOriginalCode() << "\n";
+				s	<< newLine;
+		}
+
+		s << alu1.toString() << "\n\n"
 
 
-		<< "--------------------Decode Stage-------------------- \n"
+		<< newLine
+		<< "----------------------------------DECODE STAGE---------------------------------- \n"
+		<< newLine
+		<< mainControlUnit.toString() << "\n\n"
+
 		<< mux1.toString() << "\n\n"
 		<< registerFile.toString() << "\n\n"
-
-		<< mainControlUnit.toString() << "\n\n"
 
 		<< shiftL1.toString() << "\n\n"
 		<< signExtend32.toString() << "\n\n"
 
 
-		<< "--------------------Execute Stage-------------------- \n"
+		<< newLine
+		<< "----------------------------------EXECUTE STAGE--------------------------------- \n"
+		<< newLine
+		<< ALUControl.toString() << "\n\n"
+
+		<< "--------------------Register File -> ALU -> Data Memory Path--------------------\n\n"
+		<< mux2.toString()<< "\n\n"
+		<< alu3.toString() << "\n\n"
+
+		<< "------------------------------BEQ Instruction Path------------------------------\n\n"
 		<< shiftL2.toString() << "\n\n"
 		<< alu2.toString() << "\n\n"
 		<< mux5.toString() << "\n\n"
 		<< mux4.toString() << "\n\n"
 
-		<< mux2.toString()<< "\n\n"
-		<< alu3.toString() << "\n\n"
-		<< ALUControl.toString() << "\n\n"
 
-
-		<< "--------------------Memory Stage-------------------- \n"
+		<< newLine
+		<< "----------------------------------MEMORY STAGE---------------------------------- \n"
+		<< newLine
 		<< dataMem->printInputsAndOutput() << "\n\n"
 		<< mux3.toString() << "\n\n";
 
 	if (print_memory_contents) {
-			s << dataMem->printDataMemory()
+			s << newLine
+				<< dataMem->printDataMemory()
+				<< newLine
 				<< registerMem.toString();
 	}
 
@@ -345,4 +348,27 @@ void MainProcessor::printProcessor()
 		// Print to command prompt
 		cout << s.str() << endl;
 	}
+}
+
+
+void MainProcessor::resetContents()
+// Reset the values of the member variables of each object
+{
+	alu1.reset();
+	alu2.reset();
+	alu3.reset();
+
+	mux1.reset();
+	mux2.reset();
+	mux3.reset();
+	mux4.reset();
+	mux5.reset();
+
+	shiftL1.reset();
+	shiftL2.reset();
+
+	registerFile.reset();
+	ALUControl.reset();
+	signExtend32.reset();
+	mainControlUnit.reset();
 }

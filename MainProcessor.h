@@ -20,6 +20,7 @@ using namespace std;
 #include "Multiplexer.h"
 #include "ShiftLeft.h"
 #include "SignExtend.h"
+#include "NumberConverter.h"
 
 class MainProcessor {
 	public:
@@ -36,9 +37,15 @@ class MainProcessor {
 
 		void writeback();
 
-		string hexToBinary(string hex);
+		bool isIType(Opcode o) { return (o == ADDI || o == LW || o == SW || o == BEQ); };
+
+		bool isJType(Opcode o) { return o == J; };
+
+		bool isRtype(Opcode o) { return (o == ADD || o == SUB || o == SLT); };
 
 		void printProcessor();
+
+		void resetContents();
 
 		// Return true if the processor is in single_step mode.
 		bool isSingleStep() { return output_mode.compare("single_step") == 0; };
@@ -56,6 +63,7 @@ class MainProcessor {
 		ofstream outfile;
 
 		int curInstrIdx; // The index of the current instruction
+		string curAddress;
 
 		string jumpAddress; // The current jump address; if none, set value to 0x400000
 
