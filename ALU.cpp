@@ -4,9 +4,10 @@ ALU::ALU()
 {
 	name = "";
 	ALUOperation = "0010";
-	input1 = "0";
-	input2 = "0";
-	output = "0";
+	input1 = "";
+	input2 = "";
+	input2_sub = "";
+	output = "";
 }
 
 string ALU::operate(string in1, string in2)
@@ -54,20 +55,31 @@ string ALU::OR()
 
 string ALU::SUBTRACT()
 {
-	output = "00000000000000000000000000000000";
-	int borrow = 0;
-	for (int i = static_cast<int>(input1.length()-1); i >= 0 ; i--)
+	input2_sub = input2;
+
+	// Invert input2
+	for (int i = 0; i < static_cast<int>(input2.length()); i++)
 	{
-		if (input1[i] == '1' && borrow > 0){
-			input1[i] = '0';
-			borrow = borrow - 1;
+		if (input2[i] == '1') {
+			input2[i] = '0';
+		} else {
+			input2[i] = '1';
 		}
-		if (input1[i] == '1' && input2[i] == '0')
-			output[i] = '1';
-		else if (input1[i] == '0' && input2[i] == '1')
-			borrow = borrow + 1;
 	}
-	return output;
+
+	// input2 + 1
+	int idx = input2.size()-1;
+	while (idx >= 0) {
+		if (input2[idx] == '1') {
+			input2[idx] = '0';
+			idx--;
+		} else {
+			input2[idx] = '1';
+			break;
+		}
+	}
+
+	return ADD();
 }
 
 string ALU::ADD()
@@ -90,16 +102,27 @@ string ALU::ADD()
 		else if (input1[i] == '1' && input2[i] == '1' && carry == 1)
 			output[i] = '1';
 	}
+
+	input1 = NumberConverter::binaryToHex(input1);
+
+	// Revert from two's complement
+	if (ALUOperation.compare("0110")==0 || ALUOperation.compare("0111")==0 )
+		input2 = input2_sub;
+
+	input2 = NumberConverter::binaryToHex(input2);
+	output = NumberConverter::binaryToHex(output);
+
 	return output;
 }
 
 string ALU::setLessThan()
 {
-	// if (input1 < input2)
-	// 	output = 1;
-	// else
-	// 	output = 0;
-	return output;
+	SUBTRACT();
+
+	if (output.at(0) == '0')
+		return "0";
+
+	return "1";
 }
 
 
@@ -118,11 +141,29 @@ string ALU::toString()
 {
 	stringstream s;
 
-	s << name << "\n"
-		<< "Input1: " << hex << "0x" << input1 << "\n"
-		<< "Input2: " << hex << "0x" << input2 << "\n"
-	  << "ALU Operation: " << "0x" << ALUOperation << "\n"
-	  << "Output: " << "0x" << output << endl;
+	s << name
+		<< "\nInput1: ";
+		if (input1.size() != 0)
+		 	s << "0x" << input1;
+
+	s	<< "\nInput2: ";
+		if (input2.size() != 0)
+		 s << "0x" << input2;
+
+	s << "\nALU Operation: 0x" << NumberConverter::binaryToHex(ALUOperation)
+	  << "\nOutput: ";
+		if (output.size() != 0)
+			s << "0x" << output << endl;
 
 	return s.str();
+}
+
+
+void ALU::reset()
+{
+	ALUOperation = "0010";
+	input1 = "";
+	input2 = "";
+	input2_sub = "";
+	output = "";
 }

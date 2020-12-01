@@ -1,7 +1,7 @@
 #include "ALUControlUnit.h"
 
 ALUControlUnit::ALUControlUnit() {
-	ALUOp = -1;
+	ALUOp = "";
 	function = "";
 	output = "";
 }
@@ -35,14 +35,31 @@ string ALUControlUnit::determineALUOperation(string ALUOperation, string func)
 	return output;
 }
 
+
 string ALUControlUnit::toString()
 {
 	stringstream s;
 
-	s << "ALU Control Unit \n"
-    << "ALU Operation Code: " << ALUOp << endl
-	  << "Function code: " << function << endl
-	  << "ALU Operation: " << output << endl;
+	s << "ALU Control Unit "
+    << "\nALU Operation Code: ";
+		if (ALUOp.size() !=0)
+		 	s << "0x" << NumberConverter::binaryToHex("00" + ALUOp);
+
+	s << "\nFunction code: ";
+		if (function.size() !=0)
+		 	s << "0x" << NumberConverter::binaryToHex("00" + function);
+
+	s << "\nALU Operation: ";
+	 	if (output.size() !=0)
+			s << "0x" << NumberConverter::binaryToHex(output) << endl;
 
 	return s.str();
+}
+
+
+void ALUControlUnit::reset()
+{
+	ALUOp = "";
+	function = "";
+	output = "";
 }

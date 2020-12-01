@@ -3,6 +3,7 @@
 
 #include <string>
 #include <sstream>
+#include "NumberConverter.h"
 
 using namespace std;
 
@@ -34,11 +35,15 @@ class ALU{
 	// return string of all values associated with this ALU
 	string toString();
 
+  // Reset value of member variables
+  void reset();
+
    private:
 	// Need to store for printing purposes
   string name;
 	string input1;
 	string input2;
+  string input2_sub;
 	string ALUOperation;
 	string output;
 };

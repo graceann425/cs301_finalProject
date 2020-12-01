@@ -24,6 +24,9 @@ class Multiplexer{
      // return string of all variables associated with this object
      string toString();
 
+     // Reset the value of all member variables
+     void reset();
+
   private:
 	   string name;
      string inputA;

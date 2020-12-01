@@ -3,6 +3,7 @@
 
 #include <string>
 #include <sstream>
+#include "NumberConverter.h"
 
 using namespace std;
 
@@ -18,6 +19,9 @@ class ALUControlUnit{
 
 	// return all values associated with this ALUControl unit
 	string toString();
+
+  // reset the value of all member variables
+  void reset();
 
   private:
 	// Store for the purpose of printing out info

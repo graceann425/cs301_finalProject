@@ -5,6 +5,7 @@ using namespace std;
 
 #include <string>
 #include "RegisterMemory.h"
+#include "NumberConverter.h"
 
 class RegisterFile {
   public:
@@ -30,8 +31,11 @@ class RegisterFile {
     // Get the data in R2
     string getDataR2();
 
-    // return string of all registers and values currently stored
+    // Return string of all registers and values currently stored
     string toString();
+
+    // Reset the value of all member variables
+    void reset();
 
   private:
     RegisterMemory* rm;

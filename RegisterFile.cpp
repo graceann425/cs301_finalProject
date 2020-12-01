@@ -38,8 +38,22 @@ string RegisterFile::toString() {
     << "R2: " << to_string(R2) << "\n"
     << "Write Register: " << to_string(writeRegister) << "\n"
     << "Out \n"
-    << "R1 Data: 0x" << dataR1 << "\n"
-    << "R2 Data: 0x" << dataR2 << "\n";
+    << "R1 Data: ";
+    if (dataR1.size() != 0)
+      s << "0x" << dataR1;
+
+  s << "\nR2 Data: ";
+    if (dataR2.size() != 0)
+      s << "0x" << dataR2 << "\n";
 
   return s.str();
+}
+
+
+void RegisterFile::reset() {
+  R1 = -1;
+  R2 = -1;
+  writeRegister = -1;
+  dataR1 = "";
+  dataR2 = "";
 }
