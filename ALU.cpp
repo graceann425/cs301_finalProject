@@ -54,7 +54,6 @@ string ALU::OR()
 
 string ALU::SUBTRACT()
 {
-	int borrow = 0;
 	for (int i = 0; i < static_cast<int>(input1.length()); i++)
 	{
 		if (input1[i] == '1')
