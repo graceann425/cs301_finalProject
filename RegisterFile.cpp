@@ -18,12 +18,14 @@ void RegisterFile::writeData(string data) {
 
 
 string RegisterFile::getDataR1() {
-  return rm->getRegister(R1);
+  dataR1 = rm->getRegister(R1);
+  return dataR1;
 }
 
 
 string RegisterFile::getDataR2() {
-  return rm->getRegister(R2);
+  dataR2 = rm->getRegister(R2);
+  return dataR2;
 }
 
 
@@ -36,8 +38,8 @@ string RegisterFile::toString() {
     << "R2: " << to_string(R2) << "\n"
     << "Write Register: " << to_string(writeRegister) << "\n"
     << "Out \n"
-    << "R1 Data: " << dataR1 << "\n"
-    << "R2 Data: " << dataR2 << "\n";
+    << "R1 Data: 0x" << dataR1 << "\n"
+    << "R2 Data: 0x" << dataR2 << "\n";
 
   return s.str();
 }
