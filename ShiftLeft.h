@@ -3,6 +3,7 @@
 
 #include <string>
 #include <sstream>
+#include "NumberConverter.h"
 
 using namespace std;
 
@@ -21,6 +22,9 @@ class ShiftLeft{
 
 	// return all associated values of this unit
 	string toString();
+
+  // Reset the value of all member variables
+  void reset();
 
     private:
 	string name;
