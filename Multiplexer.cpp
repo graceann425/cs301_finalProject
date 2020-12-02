@@ -1,5 +1,6 @@
 #include "Multiplexer.h"
 
+//constructor
 Multiplexer::Multiplexer()
 {
 	name = "";
@@ -9,7 +10,7 @@ Multiplexer::Multiplexer()
 	output = "";
 }
 
-
+//select: if control signal is 0, outputs string a, otherwise, outputs string b
 string Multiplexer::select(string a, string b, int cs)
 {
 	if (a.size() == 32) {
@@ -35,15 +36,14 @@ string Multiplexer::select(string a, string b, int cs)
 	}
 }
 
-
+//getOutput: returns output
 string Multiplexer::getOutput()
 {
 	return output;
 }
 
-
-string Multiplexer::toString()
-{
+//toString
+string Multiplexer::toString() {
 	stringstream s;
 
 	s << "MULTIPLEXER \t"
