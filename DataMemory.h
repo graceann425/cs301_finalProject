@@ -47,6 +47,9 @@ class DataMemory{
     //print all the memory stored in this object
     string printDataMemory();
 
+    // reset the value of member variables (excluding vector)
+    void reset();
+
   private:
     string InAddress;
     string InData;

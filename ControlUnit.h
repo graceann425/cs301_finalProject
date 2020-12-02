@@ -4,6 +4,7 @@
 #include <string>
 #include <sstream>
 #include "Opcode.h"
+#include "NumberConverter.h"
 
 using namespace std;
 
@@ -30,7 +31,11 @@ class ControlUnit{
 	   // Print the state of all the control signals
      string toString();
 
+     // Reset the value of all member variables
+     void reset();
+
    private:
+     Opcode o;
      // The different control signals available
      int RegDest;
      int Jump;
