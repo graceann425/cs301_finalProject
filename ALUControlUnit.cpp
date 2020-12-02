@@ -1,11 +1,13 @@
 #include "ALUControlUnit.h"
 
+//constructor
 ALUControlUnit::ALUControlUnit() {
 	ALUOp = -1;
 	function = "";
 	output = "";
 }
 
+//determineALUOperation: sets ALUOp based on 6 digit binary op code
 string ALUControlUnit::determineALUOperation(string ALUOperation, string func)
 {
 	ALUOp = ALUOperation;
@@ -35,6 +37,7 @@ string ALUControlUnit::determineALUOperation(string ALUOperation, string func)
 	return output;
 }
 
+//to string
 string ALUControlUnit::toString()
 {
 	stringstream s;
