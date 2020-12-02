@@ -21,13 +21,13 @@ void LabelTable::addLabels(string filename)
     LabelEntry le;                 // Holds label and address
 
     while (getline(in, line)){
-
       // Ignore blank or comment lines
-      if (line.at(0) == '#' || line.size() == 0)
+      if (line.at(0) == '#' || static_cast<int>(line.size()) == 0)
          continue;
 
+      
       // Look at every character in current line for a ':'
-      for (int i = 0; i < static_cast<int>(line.length()); i++){
+      for (std::size_t i = 0; i < line.size(); i++){
 
          if (line.at(i) == ':') {
            string label = line.substr(0,i);
