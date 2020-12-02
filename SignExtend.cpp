@@ -1,11 +1,13 @@
 #include "SignExtend.h"
 
+//constructor
 SignExtend::SignExtend()
 {
 	input = "";
 	output = "";
 }
 
+//extendTo32: extends string value by adding to the most significant bits
 string SignExtend::extendTo32(string value)
 {
 	input = value;
@@ -22,7 +24,7 @@ string SignExtend::extendTo32(string value)
 	return output;
 }
 
-
+//toString
 string SignExtend::toString()
 {
 	stringstream s;
