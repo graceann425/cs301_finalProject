@@ -10,33 +10,205 @@ void testing()
 // For testing objects
 {
 
-  stringstream s;
-  // 31 bit cannot be 1
-  int l = stoi("1000000000000000",nullptr,2);
-  int r = stoi("0000001010111100",nullptr,2);
-  // (r < 0x8000)
 
-  string sr = "hello";
-  sr += 4;
-  cout << sr << endl;
+  //testing ALU
+  ALU *a;
+  a = new ALU();
+  a->setName('Test ALU');
 
-  s << dec << l << " " << r << endl;
-  s << hex << l << " " << r;
-  cout << s.str() << endl;
+  //testing add operation
+  a->setOperation('0010');
+  a->operate('00000000000000000000000000000111', '000000000000000000000000000110');
+  cout << 'Test ALU' << '\n';
+  cout << "Input 1: 0x00000007" << '\n';
+  cout << "Input 2: 0x00000006" << '\n';
+  cout << "ALU Operation: 0x00000002" << '\n';
+  cout << "Output: 0x0000000D" << endl;
+  cout << a->toString();
 
-  string hexi = NumberConverter::binaryToHex("10001100010000010000001010111100");
-  cout << hexi << endl;
+  a->operate('11111111111111111111111111111000', '11111111111111111111111111111011');
+  cout << 'Test ALU' << '\n';
+  cout << "Input 1: 0xFFFFFFF8" << '\n';
+  cout << "Input 2: 0xFFFFFFFB" << '\n';
+  cout << "ALU Operation: 0x00000002" << '\n';
+  cout << "Output: 0xFFFFFFF3" << endl;
+  cout << a->toString();
+
+  //testing subtract operation
+  a->setOperation('0110');
+  a->operate('00000000000000000000000000000111', '000000000000000000000000000110');
+  cout << 'Test ALU' << '\n';
+  cout << "Input 1: 0x00000007" << '\n';
+  cout << "Input 2: 0x00000006" << '\n';
+  cout << "ALU Operation: 0x00000006" << '\n';
+  cout << "Output: 0x00000001" << endl;
+  cout << a->toString();
+
+  a->operate('11111111111111111111111111111000', '11111111111111111111111111111011');
+  cout << 'Test ALU' << '\n';
+  cout << "Input 1: 0xFFFFFFF8" << '\n';
+  cout << "Input 2: 0xFFFFFFFB" << '\n';
+  cout << "ALU Operation: 0x00000006" << '\n';
+  cout << "Output: 0xFFFFFFFD" << endl;
+  cout << a->toString();
+
+  //testing and operation
+  a->setOperation('0000');
+  a->operate('00000000000000000000000000000111', '000000000000000000000000000110');
+  cout << 'Test ALU' << '\n';
+  cout << "Input 1: 0x00000007" << '\n';
+  cout << "Input 2: 0x00000006" << '\n';
+  cout << "ALU Operation: 0x00000000" << '\n';
+  cout << "Output: 0x00000006" << endl;
+  cout << a->toString();
+
+  a->operate('11111111111111111111111111111000', '11111111111111111111111111111011');
+  cout << 'Test ALU' << '\n';
+  cout << "Input 1: 0xFFFFFFF8" << '\n';
+  cout << "Input 2: 0xFFFFFFFB" << '\n';
+  cout << "ALU Operation: 0x00000000" << '\n';
+  cout << "Output: 0xFFFFFFF8" << endl;
+  cout << a->toString();
+
+  //testing or operation
+  a->setOperation('0001');
+  a->operate('00000000000000000000000000000111', '000000000000000000000000000110');
+  cout << 'Test ALU' << '\n';
+  cout << "Input 1: 0x00000007" << '\n';
+  cout << "Input 2: 0x00000006" << '\n';
+  cout << "ALU Operation: 0x00000001" << '\n';
+  cout << "Output: 0x00000007" << endl;
+  cout << a->toString();
+
+  a->operate('11111111111111111111111111111000', '11111111111111111111111111111011');
+  cout << 'Test ALU' << '\n';
+  cout << "Input 1: 0xFFFFFFF8" << '\n';
+  cout << "Input 2: 0xFFFFFFFB" << '\n';
+  cout << "ALU Operation: 0x00000001" << '\n';
+  cout << "Output: 0xFFFFFFFB" << endl;
+  cout << a->toString();
+
+  //testing set on less than operation
+  a->setOperation('0111');
+  a->operate('00000000000000000000000000000111', '000000000000000000000000000110');
+  cout << 'Test ALU' << '\n';
+  cout << "Input 1: 0x00000007" << '\n';
+  cout << "Input 2: 0x00000006" << '\n';
+  cout << "ALU Operation: 0x00000007" << '\n';
+  cout << "Output: 0x00000000" << endl;
+  cout << a->toString();
+
+  a->operate('11111111111111111111111111111000', '11111111111111111111111111111011');
+  cout << 'Test ALU' << '\n';
+  cout << "Input 1: 0xFFFFFFF8" << '\n';
+  cout << "Input 2: 0xFFFFFFFB" << '\n';
+  cout << "ALU Operation: 0x00000007" << '\n';
+  cout << "Output: 0x00000001" << endl;
+  cout << a->toString();
+
+  delete a;
+
+  //testing ALU Control Unit
+  ALUControlUnit *a;
+  a = new ALUControlUnit();
+  cout << "Test ALU Control Unit" << endl;
+  //testing add
+  a->determineALUOperation('10', '100000');
+  cout << "Test add" << '\n';
+  cout << "ALU Operation Code: 10" << '\n';
+  cout << "Function Code: 100000" << '\n';
+  cout << "ALU Operation: 0010" << endl;
+  cout << a->toString();
+  //testing subtract
+  a->determineALUOperation('10', '100010');
+  cout << "Test subtract" << '\n';
+  cout << "ALU Operation Code: 10" << '\n';
+  cout << "Function Code: 100010" << '\n';
+  cout << "ALU Operation: 0110" << endl;
+  cout << a->toString();
+  //testing and
+  a->determineALUOperation('10', '100100');
+  cout << "Test and" << '\n';
+  cout << "ALU Operation Code: 10" << '\n';
+  cout << "Function Code: 100100" << '\n';
+  cout << "ALU Operation: 0000" << endl;
+  cout << a->toString();
+  //testing or
+  a->determineALUOperation('10', '100101');
+  cout << "Test or" << '\n';
+  cout << "ALU Operation Code: 10" << '\n';
+  cout << "Function Code: 100101" << '\n';
+  cout << "ALU Operation: 0001" << endl;
+  cout << a->toString();
+  //testing beq
+  a->determineALUOperation('01', '100000');
+  cout << "Test beq" << '\n';
+  cout << "ALU Operation Code: 01" << '\n';
+  cout << "Function Code: 000000" << '\n';
+  cout << "ALU Operation: 0110" << endl;
+  cout << a->toString();
+  //testing lw/sw
+  a->determineALUOperation('00', '100000');
+  cout << "Test sw/lw" << '\n';
+  cout << "ALU Operation Code: 00" << '\n';
+  cout << "Function Code: 000000" << '\n';
+  cout << "ALU Operation: 0010" << endl;
+  cout << a->toString();
+
+  //testing Multiplexer
+  Multiplexer *m;
+  m = new Multiplexer();
+  cout << "Test Multiplexer" << endl;
+  m->select("00001111", "11110000", 0);
+  cout << "MULTIPLEXER" << '\n';
+  cout << "Input 0: 00001111" << '\n';
+  cout << "Input 1: 11110000" << '\n';
+  cout << "Control Signal: 0x0" << '\n';
+  cout << "Output: 00001111" << endl;
+  cout << m->toString();
+  Multiplexer *m;
+  m = new Multiplexer();
+  cout << "Test Multiplexer" << endl;
+  m->select("00001111", "11110000", 1);
+  cout << "MULTIPLEXER" << '\n';
+  cout << "Input 0: 00001111" << '\n';
+  cout << "Input 1: 11110000" << '\n';
+  cout << "Control Signal: 0x1" << '\n';
+  cout << "Output: 11110000" << endl;
+  cout << m->toString();
+
+  //testing shift left
+  ShiftLeft *s;
+  s = new ShiftLeft();
+  cout << "Test Shift Left" << endl;
+  s->shift("11111111");
+  cout << "SHIFT LEFT 2" << '\n';
+  cout << "Input: 11111111" << '\n';
+  cout << "Output: 11111100" << endl;
+  cout << s->toString();
+  s->shiftAdd("11111111");
+  cout << "SHIFT LEFT 2" << '\n';
+  cout << "Input: 11111111" << '\n';
+  cout << "Output: 1111111100" << endl;
+  cout << s->toString();
+
+  //testing sign extend
+  SignExtend *s;
+  s = new SignExtend();
+  cout << "Test Sign Extend" << endl;
+  s->extendTo32("10");
+  cout << "SIGN EXTEND 32" << '\n';
+  cout << "Input: 10" << '\n';
+  cout << "Output: 111111111111111110" << endl;
+  cout << s->toString();
+  s->extendTo32("01");
+  cout << "SIGN EXTEND 32" << '\n';
+  cout << "Input: 01" << '\n';
+  cout << "Output: 000000000000000001" << endl;
+  cout << s->toString();
 
   exit(1);
-  // s << hex << 10;
-  //
-  // cout << s.str() << endl;
-  //
-  // int e = stoi("0x1AbC", nullptr, 16);
-  // cout << e << endl;
-  // cout << "0x" << hex << e << endl;
-  // int i = stoi("10000000000000000000000",nullptr,2);
-  // cout << "0x" << hex << i << endl;
+
 
   // ALU *a;
   // a = new ALU();
