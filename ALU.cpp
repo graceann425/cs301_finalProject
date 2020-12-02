@@ -128,10 +128,13 @@ string ALU::setLessThan()
 {
 	SUBTRACT();
 
-	if (output.at(0) == '0')
-		return "0";
+	if (output.at(0) == '0'){
+		output = "00000000";
+		return output;
+	}
 
-	return "1";
+	output = "00000001";
+	return output;
 }
 
 //setName
