@@ -31,19 +31,19 @@ string ShiftLeft::shiftAdd(string value)
 string ShiftLeft::toString()
 {
 	stringstream s;
-	cout << "made it into shiftLeft\n";
+	//cout << "made it into shiftLeft\n";
 	s << "SHIFT LEFT 2 \t "
 		<< name
 		<< "\nInput: ";
 		if (input.size() != 0) {
 			if (input.size() == 26) {
-				char c = input.at(0);
-				if (c == '1') {
-					input = "11" + input;
-				} else {
-					input = "00" + input;
-				}
-				s << "0x" << NumberConverter::binaryToHex(input);
+				// char c = input.at(0);
+				// if (c == '1') {
+				// 	input = "11" + input;
+				// } else {
+				// 	input = "00" + input;
+				// }
+				s << "0x" << NumberConverter::binaryToHex("00"+input);
 			} else {
 				s << "0x" << NumberConverter::binaryToHex(input);
 			}
@@ -51,7 +51,7 @@ string ShiftLeft::toString()
 	s	<< "\nOutput: ";
 		if (output.size() != 0)
 			s << "0x" << NumberConverter::binaryToHex(output) << "\n";
-		cout << "Made it past shiftLeft\n";
+		//cout << "Made it past shiftLeft\n";
 	return s.str();
 }
 
