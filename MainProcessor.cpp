@@ -96,6 +96,9 @@ MainProcessor::MainProcessor(string config_filename)
 }
 
 
+/**
+ * Default destructor.
+ */
 MainProcessor::~MainProcessor()
 {
 	delete dataMem;
@@ -104,6 +107,11 @@ MainProcessor::~MainProcessor()
 }
 
 
+/**
+ * Fetch stage of an instruction cycle. It reads and updates the current address.
+ *
+ * @return true if the new address is within bounds of the program, false if not.
+ */
 bool MainProcessor::fetch()
 {
 	 // Get string address and convert to int (hex)
@@ -131,6 +139,9 @@ bool MainProcessor::fetch()
 }
 
 
+/**
+ * Decode stage of an instruction cycle.
+ */
 void MainProcessor::decode()
 {
 	// Set control signals according to instruction opcode
@@ -184,9 +195,11 @@ void MainProcessor::decode()
 	}
 }
 
-// R Type : ADD, SUB, SLT
-// I Type : ADDI, LW, SW, BEQ
-// J Type : J
+
+/**
+ * Execute stage of an instruction cycle.
+ *
+ */
 void MainProcessor::execute()
 {
 	Opcode o = currentInstruction.getOpcode();
@@ -248,6 +261,9 @@ void MainProcessor::execute()
 }
 
 
+/**
+ * Memory stage of an instruction cycle.
+ */
 void MainProcessor::memory()
 {
 	if (mainControlUnit.getMemRead() == 1) {
@@ -271,6 +287,10 @@ void MainProcessor::writeback()
 }
 
 
+/**
+ * Print or write the current contents of all objects in this processor.
+ *
+ */
 void MainProcessor::printProcessor()
 {
 	string newLine = "--------------------------------------------------------------------------------\n";
@@ -351,8 +371,11 @@ void MainProcessor::printProcessor()
 }
 
 
+/**
+ * Reset the values of the member variables of each object.
+ *
+ */
 void MainProcessor::resetContents()
-// Reset the values of the member variables of each object
 {
 	alu1.reset();
 	alu2.reset();

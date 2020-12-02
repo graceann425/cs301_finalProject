@@ -27,24 +27,22 @@ class MainProcessor {
 		MainProcessor(string config_filename);
 		~MainProcessor();
 
+		// Stages in an instruction execution
 		bool fetch();
-
 		void decode();
-
 		void execute();
-
 		void memory();
-
 		void writeback();
 
+		// Helper methods
 		bool isIType(Opcode o) { return (o == ADDI || o == LW || o == SW || o == BEQ); };
-
 		bool isJType(Opcode o) { return o == J; };
-
 		bool isRtype(Opcode o) { return (o == ADD || o == SUB || o == SLT); };
 
+		// Print or write to a file all the objects in this processor
 		void printProcessor();
 
+		// Reset the member variables in all the objects in this processor
 		void resetContents();
 
 		// Return true if the processor is in single_step mode.
