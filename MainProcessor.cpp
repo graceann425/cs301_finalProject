@@ -1,13 +1,14 @@
 #include "MainProcessor.h"
 
+//constructor
 MainProcessor::MainProcessor(string config_filename)
 {
 
-	ifstream in;
+	ifstream in; //takes in the configuration file
 	in.open(config_filename.c_str());
 	string line;
 
-	while (getline(in, line)) {
+	while (getline(in, line)) { //parses configuration file
 		if (line.size() == 0 || line.at(0) == '#')
 			continue;
 
@@ -66,7 +67,7 @@ MainProcessor::MainProcessor(string config_filename)
 
 	}
 
-
+	//initiates objects
 	registerMem.readFileMemory(register_file_input);
 	dataMem = new DataMemory(memory_contents_input);
 	parser = new ASMParser(program_input);
