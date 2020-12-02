@@ -63,12 +63,22 @@ string RegisterFile::toString() {
     << "Write Register: " << to_string(writeRegister) << "\n"
     << "Out \n"
     << "R1 Data: ";
-    if (dataR1.size() != 0)
-      s << "0x" << dataR1;
+    if (dataR1.size() != 0) {
+      if (dataR1.at(0) == '0' && dataR1.at(1) == 'x'){
+        s << dataR1;
+      } else {
+        s << "0x" << dataR1;
+      }
+    }
 
   s << "\nR2 Data: ";
-    if (dataR2.size() != 0)
-      s << "0x" << dataR2 << "\n";
+    if (dataR2.size() != 0){
+      if (dataR2.at(0) == '0' && dataR2.at(1) == 'x'){
+        s << dataR2 << "\n";
+      } else {
+        s << "0x" << dataR2 << "\n";
+      }
+    }
 
   return s.str();
 }
