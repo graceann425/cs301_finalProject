@@ -135,6 +135,7 @@ bool MainProcessor::fetch()
 	// Update address to next instruction (PC+4)
 	string binary_4 = "00000000000000000000000000000100";
 	alu1.operate(NumberConverter::hexToBinary(curAddress), binary_4);
+	pc->setAddress(alu1.getOutput());
 
 	return true;
 }
@@ -146,7 +147,8 @@ bool MainProcessor::fetch()
 void MainProcessor::decode()
 {
 	// Set control signals according to instruction opcode
-	mainControlUnit.setControlSignal(currentInstruction.getOpcode());
+	string opcode = currentInstruction.getEncoding().substr(0,6);
+	mainControlUnit.setControlSignal(currentInstruction.getOpcode(), opcode);
 
 	if (mainControlUnit.getJump() == 1) {
 		// Get jump address and shift left by 2
@@ -168,7 +170,7 @@ void MainProcessor::decode()
 		Opcode o = currentInstruction.getOpcode();
 
 		// Determine write register
-		if (o == LW || isRtype(o)) {
+		if (o == LW || o == ADDI || isRtype(o)) {
 
 			string rt = to_string(currentInstruction.getRT());
 			string rd = to_string(currentInstruction.getRD());
@@ -239,6 +241,8 @@ void MainProcessor::execute()
 		// Add PC+4 and address from beq to get target address
 		string curAddress_binary = NumberConverter::hexToBinary(curAddress);
 		alu2.operate(curAddress_binary, beq_address);
+		// string curAddress_binary = NumberConverter::hexToBinary(pc->getAddress());
+		// alu2.operate(curAddress_binary, beq_address);
 
 
 		string alu3_output = alu3.getOutput();
@@ -287,7 +291,7 @@ void MainProcessor::memory()
 void MainProcessor::writeback()
 {
 	Opcode o = currentInstruction.getOpcode();
-	if (o == LW || isRtype(o)) {
+	if (o == LW || o == ADDI || isRtype(o)) {
 		string mux3_result = "";
 		mux3_result = mux3.select(alu3.getOutput(), dataMem->getOutData(), mainControlUnit.getMemToReg());
 		registerFile.writeData(mux3_result);
@@ -320,7 +324,7 @@ void MainProcessor::printProcessor()
 				s << newLine;
 				for (int i=0; i < static_cast<int>(instructions.size()); i++)
 					s << instructions.at(i).getOriginalCode() << "\n";
-				s	<< newLine;
+				s	<< newLine << "\n";
 		}
 
 		s << alu1.toString() << "\n\n"
