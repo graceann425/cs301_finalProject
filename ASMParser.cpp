@@ -8,7 +8,7 @@ ASMParser::ASMParser(string filename)
   myFormatCorrect = true;
 
   myLabelAddress = 0x400000;
-
+  
   // Parse document for labels
   labels.addLabels(filename);
 
