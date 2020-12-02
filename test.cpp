@@ -171,6 +171,57 @@ void testing()
   cout << "ALU Operation: 0010" << endl;
   cout << a->toString();
   
+  //testing Multiplexer
+  Multiplexer *m;
+  m = new Multiplexer();
+  cout << "Test Multiplexer" << endl;
+  m->select("00001111", "11110000", 0);
+  cout << "MULTIPLEXER" << '\n';
+  cout << "Input 0: 00001111" << '\n';
+  cout << "Input 1: 11110000" << '\n';
+  cout << "Control Signal: 0x0" << '\n';
+  cout << "Output: 00001111" << endl;
+  cout << m->toString();
+  Multiplexer *m;
+  m = new Multiplexer();
+  cout << "Test Multiplexer" << endl;
+  m->select("00001111", "11110000", 1);
+  cout << "MULTIPLEXER" << '\n';
+  cout << "Input 0: 00001111" << '\n';
+  cout << "Input 1: 11110000" << '\n';
+  cout << "Control Signal: 0x1" << '\n';
+  cout << "Output: 11110000" << endl;
+  cout << m->toString();
+  
+  //testing shift left
+  ShiftLeft *s;
+  s = new ShiftLeft();
+  cout << "Test Shift Left" << endl;
+  s->shift("11111111");
+  cout << "SHIFT LEFT 2" << '\n';
+  cout << "Input: 11111111" << '\n';
+  cout << "Output: 11111100" << endl;
+  cout << s->toString();
+  s->shiftAdd("11111111");
+  cout << "SHIFT LEFT 2" << '\n';
+  cout << "Input: 11111111" << '\n';
+  cout << "Output: 1111111100" << endl;
+  cout << s->toString();
+  
+  //testing sign extend
+  SignExtend *s;
+  s = new SignExtend();
+  cout << "Test Sign Extend" << endl;
+  s->extendTo32("10");
+  cout << "SIGN EXTEND 32" << '\n';
+  cout << "Input: 10" << '\n';
+  cout << "Output: 111111111111111110" << endl;
+  cout << s->toString();
+  s->extendTo32("01");
+  cout << "SIGN EXTEND 32" << '\n';
+  cout << "Input: 01" << '\n';
+  cout << "Output: 000000000000000001" << endl;
+  cout << s->toString();
   
   exit(1);
   // s << hex << 10;
