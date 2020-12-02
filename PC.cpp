@@ -1,6 +1,12 @@
 #include "PC.h"
 
-string PC::toString(){
+/**
+ * Return a string outputing all relevant information stored in this object.
+ *
+ * @return a string with the address of PC
+ */
+string PC::toString()
+{
   stringstream s;
 
   s << "PC \n"
