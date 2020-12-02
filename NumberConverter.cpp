@@ -118,11 +118,10 @@ namespace NumberConverter {
   		count += 4;
   	}
 
-  	char bit = binary.at(0);
-  	//cout << "before: " << binary << endl;
+  	//char bit = binary.at(0);
+    char bit = '0';
   	while (count < 32) {
   		binary = bit + binary;
-  		//cout << "after: " << binary << endl;
   		count++;
   	}
 
