@@ -31,7 +31,7 @@ ASMParser::ASMParser(string filename)
         continue;
       if (line.at(0) == '#')
         continue;
-        
+
       // If line starts with a label, remove it before getting tokens
       string::size_type idx = line.find(':');
       if (idx != string::npos)
