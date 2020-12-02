@@ -8,7 +8,7 @@ ShiftLeft::ShiftLeft()
 	output = "";
 }
 
-//shiftLeft: shifts binary string left by 2 
+//shiftLeft: shifts binary string left by 2
 //(removes two most significant bits and adds two zeros in the least significant bits)
 string ShiftLeft::shift(string value)
 {
@@ -31,14 +31,18 @@ string ShiftLeft::shiftAdd(string value)
 string ShiftLeft::toString()
 {
 	stringstream s;
-
+	cout << "made it into shiftLeft\n";
 	s << "SHIFT LEFT 2 \t "
 		<< name
 		<< "\nInput: ";
 		if (input.size() != 0) {
 			if (input.size() == 26) {
 				char c = input.at(0);
-				input = "" + c + c + input;
+				if (c == '1') {
+					input = "11" + input;
+				} else {
+					input = "00" + input;
+				}
 				s << "0x" << NumberConverter::binaryToHex(input);
 			} else {
 				s << "0x" << NumberConverter::binaryToHex(input);
@@ -47,7 +51,7 @@ string ShiftLeft::toString()
 	s	<< "\nOutput: ";
 		if (output.size() != 0)
 			s << "0x" << NumberConverter::binaryToHex(output) << "\n";
-
+		cout << "Made it past shiftLeft\n";
 	return s.str();
 }
 
