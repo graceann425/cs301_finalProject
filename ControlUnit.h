@@ -15,7 +15,7 @@ class ControlUnit{
 	   ~ControlUnit() {};
 
      // Given an opcode, set the value of the corresponding control signals to 1 or 0
-	   void setControlSignal(Opcode op);
+	   void setControlSignal(Opcode op, string op_bi);
 
 	   // Getters for all control signals
 	   int getRegDest() { return RegDest; };
@@ -36,6 +36,7 @@ class ControlUnit{
 
    private:
      Opcode o;
+     string op_binary;
      // The different control signals available
      int RegDest;
      int Jump;
