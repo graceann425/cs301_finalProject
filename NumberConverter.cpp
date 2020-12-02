@@ -4,12 +4,19 @@
 #include "NumberConverter.h"
 
 /**
- * Author: Kent Soledispa
+ * A static-like class to convert numbers from binary to hex and vice versa.
  *
- * A "static" class
  */
 namespace NumberConverter {
 
+
+  /*
+   * The function takes a binary number and converts it to a hexadecimal number.
+   *
+   * @param binary a string representing a binary number. Length of string must
+                   be a multiple of 4.
+   * @return a string containing a hexadecimal representation of the number.
+   */
   string binaryToHex(string binary)
   {
     if (binary.size() == 0)
@@ -21,6 +28,7 @@ namespace NumberConverter {
     std::size_t end = 4;
 
     while (end <= binary.size()) {
+      // Separate binary number into subsets of 4 and convert to int
       string substr = binary.substr(start,4);
       int num = stoi(substr,nullptr,2);
 
@@ -51,6 +59,13 @@ namespace NumberConverter {
     return hex;
   }
 
+
+  /*
+   * The function converts a hexadecimal number into its 32-bit binary equivalent.
+   *
+   * @param hex a string representing a hexadecimal number
+   * @return a string representing a 32-bit binary number
+   */
   string hexToBinary(string hex)
   {
   	string binary = "";

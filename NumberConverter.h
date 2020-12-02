@@ -6,6 +6,10 @@
 
 using namespace std;
 
+/*
+ * A static-like class used to convert binary numbers to hex and vice versa.
+ *
+ */
 namespace NumberConverter {
 
     string binaryToHex(string binary);
