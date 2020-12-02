@@ -259,9 +259,13 @@ bool ASMParser::getOperands(Instruction &i, Opcode o,
       // convert string to hexadecimal number
       imm = stoi(operand[imm_p], nullptr, 16);
 
+      // if offset rather than address
+      if (o == J && imm < 0x400000)
+        imm = imm/0x100;
+
       // if beq instruction
       if (opcodes.getInstType(o) == ITYPE)
-        imm = imm/4; // shift right 2
+        imm = imm/0x100; // get rid off the two trailing 0's
 
     }
     else{
