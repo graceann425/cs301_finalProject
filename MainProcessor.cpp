@@ -267,16 +267,23 @@ void MainProcessor::execute()
  */
 void MainProcessor::memory()
 {
+	// Read data
 	if (mainControlUnit.getMemRead() == 1) {
 		dataMem->setInAddress(alu3.getOutput());
 		dataMem->readData();
+
+	// Write data
 	} else if (mainControlUnit.getMemWrite() == 1) {
 		dataMem->setInAddress(alu3.getOutput());
 		dataMem->setInData(registerFile.getDataR2());
+		dataMem->writeData();
 	}
 }
 
 
+/**
+ * Writeback stage of the instruction cycle.
+ */
 void MainProcessor::writeback()
 {
 	Opcode o = currentInstruction.getOpcode();
@@ -391,6 +398,7 @@ void MainProcessor::resetContents()
 	shiftL1.reset();
 	shiftL2.reset();
 
+	dataMem->reset();
 	registerFile.reset();
 	ALUControl.reset();
 	signExtend32.reset();
